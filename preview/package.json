@@ -1,0 +1,14 @@
+{
+  "name": "svg-outliner-preview",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "^5.0.0",
+    "svgo": "^4.1.0"
+  }
+}

@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "preview",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-l", "5173", "preview"],
-      "port": 5173
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "svg-outliner-preview", "dev"],
+      "port": 4321
     }
   ]
 }

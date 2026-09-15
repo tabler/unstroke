@@ -1,0 +1,58 @@
+---
+import Layout from '../../components/Layout.astro';
+import Controls from '../../components/Controls.astro';
+import { convertIcon, findSet, optionsFromQuery } from '../../lib/icons';
+
+const params = Astro.url.searchParams;
+const set = findSet(params.get('set'));
+const name = Astro.params.name!;
+if (!set) return new Response('No icon sets', { status: 404 });
+const icon = convertIcon(set, name, optionsFromQuery(params));
+const subpaths = (icon.outline.match(/M/g) ?? []).length;
+const curves = (icon.outline.match(/C/g) ?? []).length;
+---
+<Layout title={name}>
+  <header>
+    <a href={`/${Astro.url.search}`}>← all icons</a>
+    <h1>{name}</h1>
+    <Controls params={params} current={set.name} />
+  </header>
+  <main>
+    {icon.error ? <pre>{icon.error}</pre> : (
+      <>
+        <div class="big">
+          <figure><div class="checker" set:html={icon.source} /><figcaption>source (stroke)</figcaption></figure>
+          <figure><div class="checker" set:html={icon.outline} /><figcaption>outline (fill)</figcaption></figure>
+          <figure>
+            <div class="checker overlay">
+              <Fragment set:html={icon.outline} />
+              <Fragment set:html={icon.reference} />
+            </div>
+            <figcaption>overlay</figcaption>
+          </figure>
+          <figure><div class="checker wire" set:html={icon.outline} /><figcaption>wireframe</figcaption></figure>
+        </div>
+        <p class="muted">{subpaths} subpaths · {curves} curves · {icon.outline.length} B · {icon.optimized.length} B optimized · {icon.ms.toFixed(1)} ms</p>
+        <h2>Source</h2>
+        <pre><code>{icon.source}</code></pre>
+        <h2>Outline</h2>
+        <pre><code>{icon.outline}</code></pre>
+        <h2>Optimized (SVGO)</h2>
+        <pre><code>{icon.optimized}</code></pre>
+      </>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .big { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  figure { margin: 0; }
+  figure > div { aspect-ratio: 1; }
+  figcaption { text-align: center; color: var(--muted); margin-top: 6px; }
+  .overlay { position: relative; }
+  .overlay :global(svg) { position: absolute; inset: 0; }
+  .overlay :global(svg:last-child) { color: #dc2626; opacity: 0.7; }
+  .wire :global(path) { fill: none; stroke: var(--accent); stroke-width: 0.1; }
+  pre { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+  h2 { font-size: 14px; margin: 24px 0 8px; }
+</style>

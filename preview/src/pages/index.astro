@@ -1,0 +1,40 @@
+---
+import Layout from '../components/Layout.astro';
+import Controls from '../components/Controls.astro';
+import IconCard from '../components/IconCard.astro';
+import { convertIcon, findSet, listIconNames, optionsFromQuery } from '../lib/icons';
+
+const params = Astro.url.searchParams;
+const set = findSet(params.get('set'));
+if (!set) throw new Error('No icon sets found');
+const options = optionsFromQuery(params);
+const q = (params.get('q') ?? '').toLowerCase();
+const limit = Number(params.get('limit')) || 300;
+
+const names = listIconNames(set).filter((n) => n.includes(q));
+const icons = names.slice(0, limit).map((n) => convertIcon(set, n, options));
+const failed = icons.filter((i) => i.error).length;
+const totalMs = icons.reduce((s, i) => s + i.ms, 0);
+const query = Astro.url.search;
+---
+<Layout title={set.name}>
+  <header>
+    <h1>svg-outliner</h1>
+    <Controls params={params} current={set.name} />
+    <span class="muted">
+      {icons.length}{names.length > icons.length ? ` of ${names.length}` : ''} icons ·
+      {failed} failed · {(totalMs / Math.max(1, icons.length)).toFixed(1)} ms avg
+      {names.length > icons.length && <a href={`${query ? query + '&' : '?'}limit=${names.length}`}> · show all</a>}
+    </span>
+  </header>
+  <main>
+    <p class="muted">source (stroke) · outline (fill) · overlay (source in red over outline, any red or dark fringe is a mismatch)</p>
+    <div class="grid">
+      {icons.map((icon) => <IconCard icon={icon} query={query} />)}
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+</style>

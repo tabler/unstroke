@@ -1,0 +1,22 @@
+---
+import { listSets } from '../lib/icons';
+
+interface Props {
+  params: URLSearchParams;
+  current: string;
+}
+const { params, current } = Astro.props;
+const sets = listSets();
+---
+<form method="get">
+  <label>set
+    <select name="set">
+      {sets.map((s) => <option value={s.name} selected={s.name === current}>{s.name}</option>)}
+    </select>
+  </label>
+  <label>stroke width <input type="number" name="width" step="0.25" min="0.25" placeholder="from file" value={params.get('width') ?? ''} /></label>
+  <label>tolerance <input type="number" name="tolerance" step="0.001" min="0.001" placeholder="0.01" value={params.get('tolerance') ?? ''} /></label>
+  <label><input type="checkbox" name="curves" value="0" checked={params.get('curves') === '0'} /> polygons only</label>
+  <label>filter <input type="search" name="q" placeholder="name…" value={params.get('q') ?? ''} /></label>
+  <button>Apply</button>
+</form>

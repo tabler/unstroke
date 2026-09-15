@@ -1,0 +1,41 @@
+---
+import type { IconEntry } from '../lib/icons';
+
+interface Props {
+  icon: IconEntry;
+  query: string;
+}
+const { icon, query } = Astro.props;
+---
+<article class="card">
+  <a class="name" href={`/icon/${icon.name}${query}`}>{icon.name}</a>
+  {icon.error ? (
+    <pre class="error">{icon.error}</pre>
+  ) : (
+    <div class="row">
+      <div class="checker" title="source (stroke)" set:html={icon.source} />
+      <div class="checker" title="outline (fill)" set:html={icon.outline} />
+      <div class="checker overlay" title="overlay: source in red over outline">
+        <Fragment set:html={icon.outline} />
+        <Fragment set:html={icon.reference} />
+      </div>
+    </div>
+  )}
+  <div class="muted meta">
+    <span>{icon.outline.length} B</span>
+    <span>{icon.optimized.length} B optimized</span>
+    <span>{icon.ms.toFixed(1)} ms</span>
+  </div>
+</article>
+
+<style>
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+  .name { display: block; font-weight: 600; margin-bottom: 8px; word-break: break-all; }
+  .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .row > div { aspect-ratio: 1; }
+  .overlay { position: relative; }
+  .overlay :global(svg) { position: absolute; inset: 0; }
+  .overlay :global(svg:last-child) { color: #dc2626; opacity: 0.7; }
+  .meta { display: flex; gap: 10px; margin-top: 8px; font-size: 12px; }
+  .error { color: #dc2626; white-space: pre-wrap; font-size: 12px; }
+</style>

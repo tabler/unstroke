@@ -144,9 +144,21 @@ one the test suite:
 Drop a new `.svg` into a fixtures folder to cover it; the output file is the
 snapshot you review in a pull request.
 
-`scripts/preview.mts` renders a comparison page for a folder of icons and
-`scripts/pixel-diff.mts` rasterizes originals and outlines and reports the
-worst mismatches.
+### Visual preview
+
+`pnpm preview` starts an Astro dev server (http://localhost:4321) that shows
+every fixture as source, outline and an overlay of both, with stroke width,
+tolerance and curve fitting adjustable from the page. Pages run the converter
+from `lib/` on every request, so edits show up on reload. To browse other
+folders, list them in `preview/.env`:
+
+```
+ICON_DIRS=../tabler-icons/icons/outline:../tabler-icons/icons/filled
+```
+
+`scripts/pixel-diff.mts` rasterizes originals and outlines for a whole folder
+and reports the worst mismatches; `scripts/diff-image.mts <file>` renders one
+icon side by side with a difference image.
 
 ## License
 
