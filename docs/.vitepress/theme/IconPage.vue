@@ -17,7 +17,7 @@ const saved = computed(() => Math.round((1 - icon.value.optimized.length / Math.
   <pre v-if="icon.error">{{ icon.error }}</pre>
   <template v-else>
     <div class="big">
-      <figure><div class="checker" v-html="icon.source" /><figcaption>source (stroke)</figcaption></figure>
+      <figure><div class="checker" v-html="icon.reference" /><figcaption>source (stroke)</figcaption></figure>
       <figure><div class="checker" v-html="icon.outline" /><figcaption>outline (fill)</figcaption></figure>
       <figure><div class="checker overlay" v-html="icon.outline + icon.reference" /><figcaption>overlay</figcaption></figure>
       <figure><div class="checker wire" v-html="icon.outline" /><figcaption>wireframe</figcaption></figure>

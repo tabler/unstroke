@@ -11,7 +11,7 @@ const saved = (from: number, to: number) => from > 0 ? Math.round((1 - to / from
     <span class="name">{{ icon.name }}</span>
     <pre v-if="icon.error" class="error">{{ icon.error }}</pre>
     <div v-else class="row">
-      <div class="checker" title="source (stroke)" v-html="icon.source" />
+      <div class="checker" title="source (stroke)" v-html="icon.reference" />
       <div class="checker" title="outline (fill)" v-html="icon.outline" />
       <div class="checker overlay" title="overlay: source in blue over the outline in grey" v-html="icon.outline + icon.reference" />
       <div v-for="w in icon.weights" :key="w.width" class="checker weight" :title="`outline at stroke-width ${w.width}`">

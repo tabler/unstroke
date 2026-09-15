@@ -29,7 +29,10 @@ export interface IconEntry {
   name: string;
   set: string;
   source: string;
-  /** Source with the overridden stroke width applied, for the overlay comparison. */
+  /**
+   * Source for display: paint normalized to `currentColor` (hand-made fixtures use `#000`)
+   * so the demo can colour it, and the overridden stroke width applied for the overlay.
+   */
   reference: string;
   outline: string;
   optimized: string;
@@ -85,6 +88,13 @@ export function listIconNames(set: IconSet): string[] {
     .sort();
 }
 
+/** Hard-coded paints become currentColor so CSS can colour the icon (overlay, dark mode). */
+function normalizePaint(svg: string): string {
+  return svg
+    .replace(/\b(stroke|fill)="(?!none|currentColor|transparent)[^"]*"/g, '$1="currentColor"')
+    .replace(/\b(stroke|fill)\s*:\s*(?!none|currentColor|transparent)[^;"']+/g, '$1: currentColor');
+}
+
 /** Strip the metadata comment Tabler keeps at the top of its icon files. */
 function cleanSource(svg: string): string {
   return svg.replace(/<!--[\s\S]*?-->/g, '').trim();
@@ -101,9 +111,10 @@ export function convertIcon(set: IconSet, name: string, options: OutlineOptions,
 
 function convertUncached(set: IconSet, name: string, options: OutlineOptions, withWeights: boolean): IconEntry {
   const source = cleanSource(readFileSync(join(set.dir, `${name}.svg`), 'utf8'));
+  const display = normalizePaint(source);
   const reference = options.strokeWidth
-    ? source.replace(/stroke-width="[^"]*"/g, `stroke-width="${options.strokeWidth}"`)
-    : source;
+    ? display.replace(/stroke-width="[^"]*"/g, `stroke-width="${options.strokeWidth}"`)
+    : display;
   const start = performance.now();
   try {
     const outline = outlineSvg(source, options);
