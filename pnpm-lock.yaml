@@ -21,6 +21,15 @@ importers:
       '@types/pngjs':
         specifier: ^6.0.5
         version: 6.0.5
+      canvaskit-wasm:
+        specifier: ^0.42.0
+        version: 0.42.0
+      clipper2-js:
+        specifier: ^1.2.4
+        version: 1.2.4(@angular/common@15.2.10(@angular/core@15.2.10(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2))(@angular/core@15.2.10(rxjs@7.8.2)(zone.js@0.13.3))
+      clipper2-wasm:
+        specifier: ^0.4.0
+        version: 0.4.0
       paper-jsdom:
         specifier: ^0.12.18
         version: 0.12.18
@@ -53,6 +62,20 @@ importers:
         version: 4.1.0
 
 packages:
+
+  '@angular/common@15.2.10':
+    resolution: {integrity: sha512-jdBn3fctkqoNrJn9VLsUHpcCEhCxWSczdsR+BBbD6T0oLl6vMrAVNjPwfBejnlgfWN1KoRU9kgOYsMxa5apIWQ==}
+    engines: {node: ^14.20.0 || ^16.13.0 || >=18.10.0}
+    peerDependencies:
+      '@angular/core': 15.2.10
+      rxjs: ^6.5.3 || ^7.4.0
+
+  '@angular/core@15.2.10':
+    resolution: {integrity: sha512-meGGidnitQJGDxYd9/LrqYiVlId+vGaLoiLgJdKBz+o2ZO6OmXQGuNw2VBqf17/Cc0/UjzrOY7+kILNFKkk/WQ==}
+    engines: {node: ^14.20.0 || ^16.13.0 || >=18.10.0}
+    peerDependencies:
+      rxjs: ^6.5.3 || ^7.4.0
+      zone.js: ~0.11.4 || ~0.12.0 || ~0.13.0
 
   '@astrojs/compiler@2.13.1':
     resolution: {integrity: sha512-f3FN83d2G/v32ipNClRKgYv30onQlMZX1vCeZMjPsMMPl1mDpmbl0+N5BYo4S/ofzqJyS5hvwacEo0CCVDn/Qg==}
@@ -1000,6 +1023,9 @@ packages:
   '@types/deep-eql@4.0.2':
     resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
 
+  '@types/emscripten@1.41.6':
+    resolution: {integrity: sha512-uN+9i8bFT5CUcZfyIEYDrSueACEyKGbUs5kC/72DGlZZoinh84sJfVV0i8UOJD1asdzkvLPBRrKs41kZ8MdEXg==}
+
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
 
@@ -1055,6 +1081,9 @@ packages:
 
   '@vitest/utils@3.2.7':
     resolution: {integrity: sha512-x6BDOd7dyo3PFLY3I9/HJ25X/6OurhGXk2/B9gOZNPF7XDVjeBK4k01lQE5uvDpbuheErh91qYuE1E2OEjK3Rw==}
+
+  '@webgpu/types@0.1.21':
+    resolution: {integrity: sha512-pUrWq3V5PiSGFLeLxoGqReTZmiiXwY3jRkIG5sLLKjyqNxrwm/04b4nw7LSmGWJcKk59XOM/YRTUwOzo4MMlow==}
 
   abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
@@ -1166,6 +1195,9 @@ packages:
     resolution: {integrity: sha512-8WB3Jcas3swSvjIeA2yvCJ+Miyz5l1ZmB6HFb9R1317dt9LCQoswg/BGrmAmkWVEszSrrg4RwmO46qIm2OEnSA==}
     engines: {node: '>=16'}
 
+  canvaskit-wasm@0.42.0:
+    resolution: {integrity: sha512-N3ikotmzYwDVAcpQKDMptBT2P5pIEWS9ywdmrQA2awwaMF9cxKEFuxZZHv9ay1Em9kDjxDsPtwUzDm1uNj136g==}
+
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
 
@@ -1208,6 +1240,15 @@ packages:
 
   clipper-lib@6.4.2:
     resolution: {integrity: sha512-knglhjQX5ihNj/XCIs6zCHrTemdvHY3LPZP9XB2nq2/3igyYMFueFXtfp84baJvEE+f8pO1ZS4UVeEgmLnAprQ==}
+
+  clipper2-js@1.2.4:
+    resolution: {integrity: sha512-xD6ETXBuFYRI0IDWfSbkmMYB+M+nPoZQVVLi1GGlVhUVKV8rC//YYP6YHJX0ciyPsWYUCMxcv1QaIGLfnQo18Q==}
+    peerDependencies:
+      '@angular/common': ^15.1.0
+      '@angular/core': ^15.1.0
+
+  clipper2-wasm@0.4.0:
+    resolution: {integrity: sha512-oYM/F8m7ogBmBXGxARJt9SEcjWPQg6+8zdfYw4Cmb5Ii5AOUjRgdQwQ9i5UW3BCJ4CFWG2CQWwm5HvekyvIdUA==}
 
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
@@ -2041,6 +2082,9 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
+  rxjs@7.8.2:
+    resolution: {integrity: sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA==}
+
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
@@ -2583,10 +2627,25 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
+  zone.js@0.13.3:
+    resolution: {integrity: sha512-MKPbmZie6fASC/ps4dkmIhaT5eonHkEt6eAy80K42tAm0G2W+AahLJjbfi6X9NPdciOE9GRFTTM8u2IiF6O3ww==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
 snapshots:
+
+  '@angular/common@15.2.10(@angular/core@15.2.10(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/core': 15.2.10(rxjs@7.8.2)(zone.js@0.13.3)
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
+  '@angular/core@15.2.10(rxjs@7.8.2)(zone.js@0.13.3)':
+    dependencies:
+      rxjs: 7.8.2
+      tslib: 2.8.1
+      zone.js: 0.13.3
 
   '@astrojs/compiler@2.13.1': {}
 
@@ -3186,6 +3245,8 @@ snapshots:
 
   '@types/deep-eql@4.0.2': {}
 
+  '@types/emscripten@1.41.6': {}
+
   '@types/estree@1.0.9': {}
 
   '@types/hast@3.0.5':
@@ -3255,6 +3316,8 @@ snapshots:
       '@vitest/pretty-format': 3.2.7
       loupe: 3.2.1
       tinyrainbow: 2.0.0
+
+  '@webgpu/types@0.1.21': {}
 
   abab@2.0.6: {}
 
@@ -3441,6 +3504,10 @@ snapshots:
 
   camelcase@8.0.0: {}
 
+  canvaskit-wasm@0.42.0:
+    dependencies:
+      '@webgpu/types': 0.1.21
+
   ccount@2.0.1: {}
 
   chai@5.3.3:
@@ -3474,6 +3541,16 @@ snapshots:
   cli-boxes@3.0.0: {}
 
   clipper-lib@6.4.2: {}
+
+  clipper2-js@1.2.4(@angular/common@15.2.10(@angular/core@15.2.10(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2))(@angular/core@15.2.10(rxjs@7.8.2)(zone.js@0.13.3)):
+    dependencies:
+      '@angular/common': 15.2.10(@angular/core@15.2.10(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2)
+      '@angular/core': 15.2.10(rxjs@7.8.2)(zone.js@0.13.3)
+      tslib: 2.8.1
+
+  clipper2-wasm@0.4.0:
+    dependencies:
+      '@types/emscripten': 1.41.6
 
   clsx@2.1.1: {}
 
@@ -4647,6 +4724,10 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.63.3
       fsevents: 2.3.3
 
+  rxjs@7.8.2:
+    dependencies:
+      tslib: 2.8.1
+
   safer-buffer@2.1.2: {}
 
   sax@1.6.1: {}
@@ -4824,8 +4905,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  tslib@2.8.1:
-    optional: true
+  tslib@2.8.1: {}
 
   tsup@8.5.1(postcss@8.5.28)(tsx@4.23.13)(typescript@5.9.3):
     dependencies:
@@ -5131,5 +5211,9 @@ snapshots:
       zod: 3.25.76
 
   zod@3.25.76: {}
+
+  zone.js@0.13.3:
+    dependencies:
+      tslib: 2.8.1
 
   zwitch@2.0.4: {}

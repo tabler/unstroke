@@ -1,5 +1,5 @@
 {
-  "name": "svg-outliner-preview",
+  "name": "unstroke-preview",
   "private": true,
   "type": "module",
   "scripts": {

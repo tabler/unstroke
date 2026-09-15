@@ -4,7 +4,7 @@
     {
       "name": "preview",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "svg-outliner-preview", "dev"],
+      "runtimeArgs": ["--filter", "unstroke-preview", "dev"],
       "port": 4321
     }
   ]

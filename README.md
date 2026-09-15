@@ -1,4 +1,4 @@
-# svg-outliner
+# unstroke
 
 Convert stroked SVG into filled outlines. Every stroke becomes a filled shape,
 overlapping shapes are merged with a boolean union, and the whole icon comes
@@ -17,13 +17,13 @@ Most existing converters offset each path segment separately and let the
 renderer's nonzero fill rule hide the overlaps. The output *looks* right but
 is made of dozens of overlapping subpaths: the file is bigger than it needs to
 be, font engines choke on it, and any edit in a vector editor shows the mess.
-`svg-outliner` computes the true union, so the output is exactly the visible
+`unstroke` computes the true union, so the output is exactly the visible
 outline and nothing else.
 
 ## Usage
 
 ```ts
-import { outlineSvg, outlinePathData } from 'svg-outliner';
+import { outlineSvg, outlinePathData } from 'unstroke';
 
 const filled = outlineSvg(svgSource);                       // whole document
 const thin = outlineSvg(svgSource, { strokeWidth: 1.5 });   // override the width
@@ -59,8 +59,8 @@ lives in a separate entry point so the core library does not depend on SVGO.
 Install `svgo` (v4) alongside and:
 
 ```ts
-import { outlineSvg } from 'svg-outliner';
-import { optimizeSvg } from 'svg-outliner/optimize';
+import { outlineSvg } from 'unstroke';
+import { optimizeSvg } from 'unstroke/optimize';
 
 const small = optimizeSvg(outlineSvg(svgSource), { precision: 3 });
 ```
@@ -127,20 +127,30 @@ Not supported yet: `use`, `text`, `image`, dashes, markers, clip paths, masks.
 Tools like Figma or Illustrator offset curves directly and run their boolean
 operations on curves. That avoids the intermediate polygon, but curve-curve
 intersection is numerically fragile and every implementation carries a long
-tail of degenerate cases. `scripts/experiment-paper.mts` tries exactly that
-approach with Paper.js (exact per-segment offsets, circles for round joins
-and caps, `unite` for the merge) on the full Tabler outline set:
+tail of degenerate cases. The `scripts/experiment-*.mts` scripts try the
+alternatives on the full Tabler outline set (5130 icons, 49 of them with
+filled paths that the experiments skip):
 
-| | Paper.js on curves | this library |
-| --- | --- | --- |
-| icons rendering wrong | 7 of 5130 (after working around two degenerate inputs) | 0 |
-| time per icon | 7.5 ms | 1.0 ms |
-| output after SVGO | 8.7 MB | 5.3 MB |
+| engine | approach | wrong output | time / icon | after SVGO |
+| --- | --- | --- | --- | --- |
+| Clipper 1 (this library) | polygons, integer grid | 0 | 1.0 ms | 5.3 MB |
+| Clipper2 (WASM) | polygons, integer grid | 0 | 0.8 ms | 5.3 MB |
+| Skia PathOps (CanvasKit) | curves | 25 (7 refused, 18 silently wrong) | 0.4 ms | 8.2 MB |
+| Paper.js | curves | 7 (silently wrong) | 7.5 ms | 8.7 MB |
 
-The failures are silent (a mangled contour, a stray spike), which is the
-worst kind for a build pipeline. Polygons with integer-grid clipping never
-fail, and the curve fit on the way out keeps the output small; the price is
-a bounded, configurable error of about three times `tolerance`.
+Skia is the boolean engine behind Chrome, Flutter and Figma, and it still
+mangles `swipe`, `coins` or `whisk` (a filled-in hole, a missing wall) and
+refuses `asterisk` or `feather` outright. Paper.js needed two workarounds for
+degenerate input before it produced anything, then failed on `brand-redux`
+and `home-infinity`. Both also emit far more curves, because they keep every
+fragment produced by the intersections and Skia writes arcs as strings of
+quadratics.
+
+The failures are silent, which is the worst kind for a build pipeline.
+Polygons with integer-grid clipping never fail, and the curve fit on the way
+out keeps the output small; the price is a bounded, configurable error of
+about three times `tolerance`. Clipper2 is a drop-in candidate if union speed
+ever matters; it costs a WASM binary and asynchronous initialization.
 
 ## Development
 

@@ -3,7 +3,7 @@ import { optimize, type Config, type PluginConfig } from 'svgo';
 /**
  * Optional SVGO pass for the markup produced by `outlineSvg`.
  *
- * Kept in its own entry point (`svg-outliner/optimize`) so the core library
+ * Kept in its own entry point (`unstroke/optimize`) so the core library
  * does not depend on SVGO; install `svgo` yourself to use it.
  */
 export interface OptimizeOptions {

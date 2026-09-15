@@ -1,5 +1,5 @@
 {
-  "name": "svg-outliner",
+  "name": "unstroke",
   "version": "0.0.0",
   "description": "Convert stroked SVG into filled outlines with properly unioned paths",
   "type": "module",
@@ -30,7 +30,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "preview": "pnpm --filter svg-outliner-preview dev",
+    "preview": "pnpm --filter unstroke-preview dev",
     "pixel-diff": "tsx scripts/pixel-diff.mts",
     "diff-image": "tsx scripts/diff-image.mts",
     "prepublishOnly": "pnpm typecheck && pnpm test && pnpm build"
@@ -42,6 +42,9 @@
     "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^24.0.0",
     "@types/pngjs": "^6.0.5",
+    "canvaskit-wasm": "^0.42.0",
+    "clipper2-js": "^1.2.4",
+    "clipper2-wasm": "^0.4.0",
     "paper-jsdom": "^0.12.18",
     "pngjs": "^7.0.0",
     "svgo": "^4.1.0",
