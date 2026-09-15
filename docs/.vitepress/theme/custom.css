@@ -1,0 +1,34 @@
+:root {
+  --vp-c-brand-1: #206bc4;
+  --vp-c-brand-2: #1a5aa6;
+  --vp-c-brand-3: #164b8a;
+  --vp-c-brand-soft: rgba(32, 107, 196, 0.14);
+  --vp-home-hero-name-color: var(--vp-c-brand-1);
+  --checker: #e5e5e5;
+}
+.dark {
+  --vp-c-brand-1: #4a9eff;
+  --vp-c-brand-2: #206bc4;
+  --vp-c-brand-3: #1a5aa6;
+  --checker: #3f3f46;
+}
+
+/* demo: full-width pages without a sidebar */
+.demo-wide .VPDoc .container { max-width: 1400px !important; }
+.demo-wide .VPDoc .content { max-width: none !important; }
+.demo-wide .VPDoc .aside { display: none; }
+
+.checker {
+  background: repeating-conic-gradient(var(--checker) 0 25%, transparent 0 50%) 0 0 / 16px 16px;
+  border-radius: 6px;
+}
+.checker svg { display: block; width: 100%; height: 100%; }
+
+/* hero image: the artwork has its own whitespace, drop the default brand glow */
+:root { --vp-home-hero-image-background-image: none; --vp-home-hero-image-filter: none; }
+/* the image column has room for more than the default 320px on wide screens */
+@media (min-width: 1200px) {
+  .VPHero .image-src { max-width: 440px; max-height: 330px; }
+}
+/* keep the artwork centred in its column instead of the theme's 32px up-left nudge */
+.VPHero .image-container { transform: none; }

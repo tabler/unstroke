@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { Resvg } from '@resvg/resvg-js';
 import { outlineSvg } from '../lib/index.js';
 import { PNG } from 'pngjs';
@@ -16,4 +16,5 @@ for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) {
   const d = a[i + 3]! - b[i + 3]!;
   set(2, d > 0 ? 255 : 0, 0, d < 0 ? 255 : 0, Math.abs(d) > 32 ? 255 : 20);
 }
-writeFileSync(process.argv[3] ?? 'preview/diff.png', PNG.sync.write(png));
+mkdirSync('test/.diff', { recursive: true });
+writeFileSync(process.argv[3] ?? 'test/.diff/diff.png', PNG.sync.write(png));

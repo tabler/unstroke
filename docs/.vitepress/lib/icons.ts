@@ -17,7 +17,7 @@ function findRoot(): string {
   throw new Error('Cannot find the repository root (pnpm-workspace.yaml)');
 }
 const ROOT = findRoot();
-const DEMO_ICONS = join(ROOT, 'preview/icons');
+const DEMO_ICONS = join(ROOT, 'docs/icons');
 const FIXTURES = join(ROOT, 'test/fixtures');
 
 export interface IconSet {
@@ -60,7 +60,7 @@ function subdirs(dir: string): string[] {
 }
 
 /**
- * Icon sets shown in the preview: every folder under preview/icons (a
+ * Icon sets shown in the demo: every folder under docs/icons (a
  * representative selection of Tabler outline icons lives there, the hard
  * ones from the test fixtures plus everyday ones) followed by the hand-made
  * test fixtures. The Tabler fixtures are skipped because the demo folder

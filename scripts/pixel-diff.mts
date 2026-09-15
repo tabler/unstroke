@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 import { outlineSvg } from '../lib/index.js';
@@ -39,4 +39,5 @@ console.log(`${files.length} icons, ${failed} failed, ${((performance.now() - t0
 console.log('worst mismatch (fraction of pixels):');
 for (const [f, d] of worst) console.log(`  ${f}  ${(d * 100).toFixed(3)}%`);
 console.log(`icons with > 0.05% mismatch: ${results.filter(([, d]) => d > 0.0005).length}`);
-writeFileSync('preview/pixel-diff.json', JSON.stringify(results));
+mkdirSync('test/.diff', { recursive: true });
+writeFileSync('test/.diff/pixel-diff.json', JSON.stringify(results));

@@ -30,7 +30,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "preview": "pnpm --filter unstroke-preview dev",
+    "docs": "pnpm --filter unstroke-docs dev",
+    "docs:build": "pnpm --filter unstroke-docs build",
     "pixel-diff": "tsx scripts/pixel-diff.mts",
     "diff-image": "tsx scripts/diff-image.mts",
     "prepublishOnly": "pnpm typecheck && pnpm test && pnpm build"

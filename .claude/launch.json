@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "preview",
+      "name": "docs",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "unstroke-preview", "dev"],
-      "port": 4321
+      "runtimeArgs": ["--filter", "unstroke-docs", "dev", "--port", "5173"],
+      "port": 5173
     }
   ]
 }
