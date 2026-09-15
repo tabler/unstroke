@@ -4,7 +4,7 @@ import { outlineSvg } from '../lib/index.js';
 import { PNG } from 'pngjs';
 const SIZE = 384;
 const src = readFileSync(process.argv[2]!, 'utf8');
-const out = outlineSvg(src);
+const out = process.argv[4] ? readFileSync(process.argv[4], 'utf8') : outlineSvg(src);
 const render = (svg: string) => new Resvg(svg.replace(/currentColor/g, '#000'), { fitTo: { mode: 'width', value: SIZE } }).render().pixels;
 const a = render(src), b = render(out);
 const png = new PNG({ width: SIZE * 3, height: SIZE });

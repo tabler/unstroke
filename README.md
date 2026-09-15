@@ -137,6 +137,34 @@ Not supported yet: `use`, `text`, `image`, dashes, markers, clip paths, masks.
    two distant vertices of a straight edge.
 6. The result is serialized as compact absolute path data.
 
+## Alternatives and output size
+
+`scripts/compare-size.mts` runs the same 203 Tabler icons (every 25th outline
+icon without filled paths) through every stroke-to-outline engine that could
+be scripted on this machine, passes each result through the same SVGO pass
+with 3 decimal places, and rasterizes it against the original:
+
+| engine | avg bytes after SVGO | avg curves | mean pixel mismatch | wrong / failed |
+| --- | ---: | ---: | ---: | ---: |
+| unstroke | 1061 | 21.9 | 0.000% | 0 |
+| unstroke, `tolerance: 0.02` | 951 | 20.0 | 0.000% | 0 |
+| Tabler webfont pipeline (svg-path-outline + Paper reorient) | 1344 | 21.8 | 0.058% | 11 |
+| Skia PathOps (CanvasKit) | 1721 | 34.0 | 0.000% | 0 |
+| Paper.js booleans | 1610 | 17.7 | 0.000% | 0 |
+| FontForge (expand stroke + remove overlap) | 589 | 13.1 | 0.244% | 17 |
+
+FontForge produces the smallest files, but only because it is imprecise:
+every icon is slightly off and some are broken (a filled-in bowl in `soup`).
+The current Tabler pipeline visibly deforms large arcs (`magnetic`,
+`database-share`) and leaves every subpath overlapping. Skia and Paper.js are
+accurate on this sample but keep every fragment their intersections produce,
+so their files are 50–60% larger. `unstroke` is the smallest output that is
+also pixel-accurate; raising `tolerance` trades accuracy for size in a
+controlled way (0.05 is already visible).
+
+Inkscape's `object-stroke-to-path` was not measured (not installed here);
+`outline-stroke` on npm delegates to FontForge and shares its results.
+
 ## Why polygons and not boolean operations on curves?
 
 Tools like Figma or Illustrator offset curves directly and run their boolean
