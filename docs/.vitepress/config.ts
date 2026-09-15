@@ -10,6 +10,10 @@ export default defineConfig({
   lastUpdated: true,
   sitemap: { hostname: SITE },
   head: [
+    ['link', { rel: 'icon', href: '/favicon.ico', sizes: '32x32' }],
+    ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
+    ['link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }],
+    ['meta', { name: 'theme-color', content: '#206bc4' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:site_name', content: 'unstroke' }],
     ['meta', { property: 'og:image', content: `${SITE}/og.png` }],
@@ -48,6 +52,7 @@ export default defineConfig({
       '/guide/': sidebar(),
       '/reference/': sidebar(),
     },
+    logo: '/favicon.svg',
     socialLinks: [{ icon: 'github', link: 'https://github.com/tabler/unstroke' }],
     editLink: { pattern: 'https://github.com/tabler/unstroke/edit/main/docs/:path' },
     search: { provider: 'local' },
