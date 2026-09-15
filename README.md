@@ -122,6 +122,26 @@ Not supported yet: `use`, `text`, `image`, dashes, markers, clip paths, masks.
    two distant vertices of a straight edge.
 6. The result is serialized as compact absolute path data.
 
+## Why polygons and not boolean operations on curves?
+
+Tools like Figma or Illustrator offset curves directly and run their boolean
+operations on curves. That avoids the intermediate polygon, but curve-curve
+intersection is numerically fragile and every implementation carries a long
+tail of degenerate cases. `scripts/experiment-paper.mts` tries exactly that
+approach with Paper.js (exact per-segment offsets, circles for round joins
+and caps, `unite` for the merge) on the full Tabler outline set:
+
+| | Paper.js on curves | this library |
+| --- | --- | --- |
+| icons rendering wrong | 7 of 5130 (after working around two degenerate inputs) | 0 |
+| time per icon | 7.5 ms | 1.0 ms |
+| output after SVGO | 8.7 MB | 5.3 MB |
+
+The failures are silent (a mangled contour, a stray spike), which is the
+worst kind for a build pipeline. Polygons with integer-grid clipping never
+fail, and the curve fit on the way out keeps the output small; the price is
+a bounded, configurable error of about three times `tolerance`.
+
 ## Development
 
 ```
