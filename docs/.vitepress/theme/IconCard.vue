@@ -32,6 +32,9 @@ const saved = (from: number, to: number) => from > 0 ? Math.round((1 - to / from
 <style scoped>
 .card { display: block; color: var(--vp-c-text-1); text-decoration: none; background: var(--vp-c-bg-soft); border: 1px solid var(--vp-c-divider); border-radius: 10px; padding: 10px; transition: border-color .15s; }
 .card:hover { border-color: var(--vp-c-brand-1); }
+/* the theme colours links (and everything using currentColor inside) on hover; the icons must not change */
+.vp-doc .card, .vp-doc .card:hover { color: var(--vp-c-text-1); text-decoration: none; }
+.row > div:not(.overlay) :deep(svg) { color: var(--vp-c-text-1); }
 .name { display: block; color: var(--vp-c-brand-1); font-weight: 600; font-size: 13px; margin-bottom: 8px; word-break: break-all; }
 .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 .row > div { aspect-ratio: 1; min-width: 0; overflow: hidden; }
