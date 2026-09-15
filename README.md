@@ -1,5 +1,7 @@
 # unstroke
 
+[![CI](https://github.com/tabler/unstroke/actions/workflows/ci.yml/badge.svg)](https://github.com/tabler/unstroke/actions/workflows/ci.yml)
+
 Convert stroked SVG into filled outlines. Every stroke becomes a filled shape,
 overlapping shapes are merged with a boolean union, and the whole icon comes
 out as a single `<path>` with no self-overlaps. That is what icon fonts, PDF
