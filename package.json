@@ -4,13 +4,14 @@
   "description": "Convert stroked SVG into filled outlines with properly unioned paths",
   "type": "module",
   "license": "MIT",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
@@ -26,7 +27,8 @@
     "typecheck": "tsc --noEmit",
     "preview": "tsx scripts/preview.mts",
     "pixel-diff": "tsx scripts/pixel-diff.mts",
-    "diff-image": "tsx scripts/diff-image.mts"
+    "diff-image": "tsx scripts/diff-image.mts",
+    "prepublishOnly": "pnpm typecheck && pnpm test && pnpm build"
   },
   "dependencies": {
     "clipper-lib": "^6.4.2"
@@ -50,5 +52,8 @@
     "webfont",
     "path",
     "union"
-  ]
+  ],
+  "engines": {
+    "node": ">=18"
+  }
 }
