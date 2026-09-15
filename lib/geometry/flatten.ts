@@ -37,12 +37,15 @@ export function cubicPoint(p0: Point, p1: Point, p2: Point, p3: Point, t: number
 
 /**
  * Flatten normalized segments into polylines, one per subpath.
- * Consecutive duplicate points are removed. A subpath consisting of a single
- * point is kept (it becomes a dot for round / square caps).
+ * Consecutive duplicate points are removed. A subpath whose drawing commands
+ * all have zero length is kept as a single point (it becomes a dot for round
+ * and square caps), while a lone moveto with no drawing command at all is
+ * dropped, as the SVG spec says it is not rendered.
  */
 export function flattenSegments(segments: Segment[], tolerance: number): Polyline[] {
   const out: Polyline[] = [];
   let current: Polyline | null = null;
+  const drawn = new Set<Polyline>();
   let cur: Point = [0, 0];
   let start: Point = [0, 0];
 
@@ -52,6 +55,7 @@ export function flattenSegments(segments: Segment[], tolerance: number): Polylin
       current = { points: [start], closed: false };
       out.push(current);
     }
+    drawn.add(current);
     const last = current.points[current.points.length - 1]!;
     if (!equals(last, p)) current.points.push(p);
   };
@@ -79,6 +83,7 @@ export function flattenSegments(segments: Segment[], tolerance: number): Polylin
       }
       case 'Z':
         if (current) {
+          drawn.add(current);
           current.closed = true;
           // drop a trailing point that duplicates the start
           const pts = current.points;
@@ -91,8 +96,7 @@ export function flattenSegments(segments: Segment[], tolerance: number): Polylin
     }
   }
 
-  // Subpath with a moveto immediately followed by Z or nothing: keep a single point
-  return out.filter((p) => p.points.length > 0);
+  return out.filter((p) => drawn.has(p));
 }
 
 /** Total length of a polyline. */

@@ -27,8 +27,9 @@ describe('cli', () => {
   it('converts a directory tree into --out', async () => {
     const o = io();
     expect(await run([FIXTURES, '-o', dir, '-q'], o)).toBe(0);
-    expect(readdirSync(join(dir, 'tabler')).length).toBe(readdirSync(join(FIXTURES, 'tabler')).length);
-    expect(readdirSync(join(dir, 'custom')).length).toBe(readdirSync(join(FIXTURES, 'custom')).length);
+    const svgs = (d: string) => readdirSync(d).filter((f) => f.endsWith('.svg')).length;
+    expect(svgs(join(dir, 'tabler'))).toBe(svgs(join(FIXTURES, 'tabler')));
+    expect(svgs(join(dir, 'custom'))).toBe(svgs(join(FIXTURES, 'custom')));
     expect(readFileSync(join(dir, 'tabler/x.svg'), 'utf8')).toContain('fill="currentColor"');
     expect(o.err).toEqual([]);
   });
@@ -55,7 +56,7 @@ describe('cli', () => {
     const o = io();
     expect(await run([join(FIXTURES, 'tabler/x.svg'), '--optimize'], o)).toBe(0);
     expect(o.out.join('')).toMatch(/d="m/i);
-    expect(o.out.join('').length).toBeLessThan(readFileSync(join(FIXTURES, '..', '__output__/tabler/x.svg'), 'utf8').length);
+    expect(o.out.join('').length).toBeLessThan(readFileSync(join(FIXTURES, '..', '__output__/stroke-2/tabler/x.svg'), 'utf8').length);
   });
 
   it('fails cleanly on bad input and bad options', async () => {

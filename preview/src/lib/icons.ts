@@ -20,9 +20,13 @@ export interface IconEntry {
   reference: string;
   outline: string;
   optimized: string;
+  /** The same icon outlined at other stroke widths. */
+  weights: { width: number; outline: string }[];
   error?: string;
   ms: number;
 }
+
+export const WEIGHTS = [0.5, 1, 1.5];
 
 function subdirs(dir: string): string[] {
   return readdirSync(dir).filter((d) => statSync(join(dir, d)).isDirectory()).sort();
@@ -67,9 +71,10 @@ export function convertIcon(set: IconSet, name: string, options: OutlineOptions)
   try {
     const outline = outlineSvg(source, options);
     const ms = performance.now() - start;
-    return { name, set: set.name, source, reference, outline, optimized: optimizeSvg(outline), ms };
+    const weights = WEIGHTS.map((width) => ({ width, outline: outlineSvg(source, { ...options, strokeWidth: width }) }));
+    return { name, set: set.name, source, reference, outline, optimized: optimizeSvg(outline), weights, ms };
   } catch (e) {
-    return { name, set: set.name, source, reference, outline: '', optimized: '', error: (e as Error).message, ms: performance.now() - start };
+    return { name, set: set.name, source, reference, outline: '', optimized: '', weights: [], error: (e as Error).message, ms: performance.now() - start };
   }
 }
 

@@ -210,14 +210,17 @@ pnpm build
 
 `test/fixtures/` holds real SVGs: the hardest Tabler icons (180° reversals,
 micro segments, tight arcs, spirals, fills mixed with strokes, and every icon
-that broke Skia, Paper.js or the previous Tabler pipeline) and hand-written
-files covering basic shapes, transforms, caps, joins and fill rules. For each
+that broke Skia, Paper.js or the previous Tabler pipeline), icons from other
+open source sets with different conventions (Feather, Lucide, Heroicons,
+Iconoir; see `test/fixtures/open-source/SOURCES.md`) and hand-written files
+covering basic shapes, transforms, caps, joins and fill rules. For each
 one the test suite:
 
-1. writes the converted SVG to `test/__output__/<group>/<name>.svg` and
-   compares it with the committed version (`pnpm vitest run -u` accepts changes),
-2. rasterizes the original and the outline and requires them to match within
-   0.05% of pixels.
+1. converts it at stroke widths 0.5, 1, 1.5 and 2, writes each result to
+   `test/__output__/stroke-<width>/<group>/<name>.svg` and compares it with
+   the committed version (`pnpm vitest run -u` accepts changes),
+2. rasterizes the original (with the same stroke width) and the outline and
+   requires them to match within 0.05% of pixels.
 
 Drop a new `.svg` into a fixtures folder to cover it; the output file is the
 snapshot you review in a pull request.

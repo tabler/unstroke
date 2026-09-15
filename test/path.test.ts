@@ -132,9 +132,11 @@ describe('flatten', () => {
     expect(lines[1]!.closed).toBe(false);
   });
 
-  it('keeps a zero-length subpath as a single point', () => {
-    const lines = flattenSegments(parsePathData('M3 3L3 3'), 0.01);
-    expect(lines[0]!.points).toEqual([[3, 3]]);
+  it('keeps a zero-length subpath as a single point but drops a lone moveto', () => {
+    expect(flattenSegments(parsePathData('M3 3L3 3'), 0.01)[0]!.points).toEqual([[3, 3]]);
+    expect(flattenSegments(parsePathData('M3 3z'), 0.01)[0]!.points).toEqual([[3, 3]]);
+    expect(flattenSegments(parsePathData('M3 3'), 0.01)).toEqual([]);
+    expect(flattenSegments(parsePathData('M1 1h2M5 5'), 0.01)).toHaveLength(1);
   });
 });
 

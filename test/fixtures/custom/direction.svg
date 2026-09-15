@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+  <!-- same square drawn clockwise and counter-clockwise: the outline must not depend on direction -->
+  <path d="M4 4h10v10H4z"/>
+  <path d="M18 4v10h10V4z"/>
+  <!-- nested squares in opposite directions and in the same direction -->
+  <path d="M32 4h12v12H32zM35 7v6h6V7z"/>
+  <path d="M4 20h12v12H4zM7 23h6v6H7z"/>
+  <!-- open path drawn left-to-right and its mirror drawn right-to-left -->
+  <path d="M20 22c4 -4 8 4 12 0"/>
+  <path d="M44 30c-4 4 -8 -4 -12 0"/>
+  <!-- fill only, nonzero: opposite direction makes a hole, same direction does not -->
+  <path fill="#000" stroke="none" d="M4 36h10v10H4zM7 39v4h4v-4z"/>
+  <path fill="#000" stroke="none" d="M18 36h10v10H18zM21 39h4v4h-4z"/>
+  <!-- a subpath that retraces itself backwards -->
+  <path d="M32 36l12 0l-12 0l0 8"/>
+</svg>

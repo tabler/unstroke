@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+  <!-- figure eight -->
+  <path d="M4 10c0 -8 16 8 16 0s-16 8 -16 0"/>
+  <!-- pentagram: every edge crosses two others, sharp miter joins -->
+  <path d="M34 2l3.5 10.8h11.4l-9.2 6.7l3.5 10.8l-9.2 -6.7l-9.2 6.7l3.5 -10.8l-9.2 -6.7h11.4z"/>
+  <!-- path crossing itself with round joins -->
+  <path stroke-linejoin="round" d="M4 20l16 12l-16 0l16 -12"/>
+  <!-- two identical paths on top of each other and a path drawn twice in one d -->
+  <path d="M4 40h16"/>
+  <path d="M4 40h16"/>
+  <path d="M4 44h16h-16h16"/>
+  <!-- spiral tighter than the stroke width: inner turns merge into a solid disc -->
+  <path stroke-linecap="round" d="M36 36m-8 0a8 8 0 1 1 16 0a6 6 0 1 1 -12 0a4 4 0 1 1 8 0a2 2 0 1 1 -4 0a.5 .5 0 1 1 1 0"/>
+</svg>

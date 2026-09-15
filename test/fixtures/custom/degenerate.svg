@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- cubic with both control points on the start point, and both on the end point -->
+  <path d="M4 4c0 0 0 0 8 8"/>
+  <path d="M16 4c8 8 8 8 8 8"/>
+  <!-- cusp: control points cross so the curve reverses direction -->
+  <path d="M28 4c12 12 -12 12 0 0"/>
+  <!-- curve whose radius is smaller than half the stroke width -->
+  <path d="M4 20a1 1 0 0 1 2 0"/>
+  <path d="M12 20c0 -1 2 -1 2 0"/>
+  <!-- arc radii too small for the endpoints (scaled up by the spec) and a zero radius arc (a line) -->
+  <path d="M20 20a1 1 0 0 1 8 0"/>
+  <path d="M32 20a0 0 0 0 1 8 0"/>
+  <!-- collinear points, duplicate points, and a move followed by nothing -->
+  <path d="M4 28l4 0l4 0l4 0"/>
+  <path d="M20 28l0 0l4 0l0 0l4 0"/>
+  <path d="M32 28l8 0M44 28"/>
+  <!-- drawing continues after a closepath without a new moveto -->
+  <path d="M4 36h8v8zl-4 4"/>
+  <!-- compact syntax: no separators, scientific notation, implicit lineto after moveto -->
+  <path d="M20 36 24 36 24 40l-.5.5-3.5-.5v-4zM28 36h1e1v4H28z"/>
+</svg>

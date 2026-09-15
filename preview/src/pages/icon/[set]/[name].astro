@@ -27,6 +27,9 @@ const curves = (icon.outline.match(/C/g) ?? []).length;
             <figcaption>overlay</figcaption>
           </figure>
           <figure><div class="checker wire" set:html={icon.outline} /><figcaption>wireframe</figcaption></figure>
+          {icon.weights.map((w) => (
+            <figure><div class="checker" set:html={w.outline} /><figcaption>stroke-width {w.width}</figcaption></figure>
+          ))}
         </div>
         <p class="muted">{subpaths} subpaths · {curves} curves · {icon.outline.length} B · {icon.optimized.length} B optimized · {icon.ms.toFixed(1)} ms</p>
         <h2>Source</h2>

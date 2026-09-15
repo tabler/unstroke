@@ -2,7 +2,7 @@ import { flattenSegments } from './geometry/flatten.js';
 import type { LineCap, LineJoin, MultiPolygon, Ring, StrokeStyle } from './geometry/types.js';
 import { nonzeroRings, unionMultiPolygons, unionRings, xorRings } from './geometry/union.js';
 import { multiPolygonToPathData, type PathDataOptions } from './output/pathData.js';
-import { type DrawableShape, parseSvg } from './parse/svg.js';
+import { type DrawableShape, type ParsedSvg, parseSvg } from './parse/svg.js';
 import { parsePathData } from './path/parse.js';
 import { applyToPoint, matrixScale, transformSegments } from './path/transform.js';
 import type { Segment } from './path/types.js';
@@ -46,7 +46,7 @@ export interface OutlineOptions extends PathDataOptions {
 /** Convert a whole SVG document: every stroke becomes a filled outline, everything is unioned into one path. */
 export function outlineSvg(svg: string, options: OutlineOptions = {}): string {
   const parsed = parseSvg(svg);
-  const tolerance = defaultTolerance(parsed.viewBox, options);
+  const tolerance = effectiveTolerance(parsed, options);
   const mp = shapesToMultiPolygon(parsed.shapes, options, tolerance);
   const d = multiPolygonToPathData(mp, { fitTolerance: tolerance * 2, ...options });
   return serializeSvg(parsed.rootAttrs, d, options.fill ?? 'currentColor');
@@ -55,7 +55,7 @@ export function outlineSvg(svg: string, options: OutlineOptions = {}): string {
 /** Same as {@link outlineSvg} but returns geometry instead of markup. */
 export function outlineSvgToMultiPolygon(svg: string, options: OutlineOptions = {}): MultiPolygon {
   const parsed = parseSvg(svg);
-  return shapesToMultiPolygon(parsed.shapes, options, defaultTolerance(parsed.viewBox, options));
+  return shapesToMultiPolygon(parsed.shapes, options, effectiveTolerance(parsed, options));
 }
 
 export interface OutlinePathOptions extends PathDataOptions {
@@ -105,10 +105,6 @@ function shapesToMultiPolygon(shapes: DrawableShape[], options: OutlineOptions, 
     if (s.stroke !== 'none' && s.stroke !== 'transparent') {
       const width = options.strokeWidth ?? s.strokeWidth;
       if (width > 0) {
-        // SVG strokes are applied in the element's own coordinate system and
-        // then transformed with it, so a non-uniform scale or skew changes the
-        // stroke's shape. Stroking locally and transforming the resulting
-        // polygons reproduces that exactly; the union is affine-invariant.
         const scale = matrixScale(shape.transform) || 1;
         const rings: Ring[] = [];
         for (const line of flattenSegments(shape.segments, tolerance / scale)) {
@@ -126,10 +122,23 @@ function shapesToMultiPolygon(shapes: DrawableShape[], options: OutlineOptions, 
   return unionMultiPolygons(parts);
 }
 
-function defaultTolerance(viewBox: [number, number, number, number] | null, options: OutlineOptions): number {
+/**
+ * Tolerance used for flattening, stroking and (doubled) curve fitting.
+ * Defaults to 1/2400 of the viewBox, but the error budget must also stay
+ * small relative to the stroke: a thin line at the viewBox-based tolerance
+ * would come out visibly thinner or shifted, so it is capped at 1/200 of the
+ * thinnest stroke in the document. An explicit `tolerance` wins.
+ */
+function effectiveTolerance(parsed: ParsedSvg, options: OutlineOptions): number {
   if (options.tolerance != null) return options.tolerance;
-  const size = viewBox ? Math.max(viewBox[2], viewBox[3]) : 24;
-  return size / 2400;
+  const size = parsed.viewBox ? Math.max(parsed.viewBox[2], parsed.viewBox[3]) : 24;
+  let tolerance = size / 2400;
+  for (const shape of parsed.shapes) {
+    if (shape.style.stroke === 'none' || shape.style.stroke === 'transparent') continue;
+    const width = options.strokeWidth ?? shape.style.strokeWidth;
+    if (width > 0) tolerance = Math.min(tolerance, width / 200);
+  }
+  return tolerance;
 }
 
 const DROPPED_ROOT_ATTRS = new Set([

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="#000" stroke-width="2" stroke-linecap="butt">
+  <!-- 10 degree spikes: miter within limit 12, cut by the default limit 4, bevel and round -->
+  <path stroke-linejoin="miter" stroke-miterlimit="12" d="M2 12l10 -10l10 10"/>
+  <path stroke-linejoin="miter" d="M26 12l10 -10l10 10"/>
+  <path stroke-linejoin="bevel" d="M2 24l10 -10l10 10"/>
+  <path stroke-linejoin="round" d="M26 24l10 -10l10 10"/>
+  <!-- zig-zag with alternating 30 degree turns -->
+  <path stroke-linejoin="miter" d="M2 34l4 -8l4 8l4 -8l4 8l4 -8l4 8l4 -8l4 8l4 -8l4 8l4 -8l4 8"/>
+  <!-- nearly straight: 178 degrees, both joins must not produce spikes -->
+  <path stroke-linejoin="miter" d="M2 40l20 .5l20 -.5"/>
+  <path stroke-linejoin="round" d="M2 46l20 .5l20 -.5"/>
+</svg>
