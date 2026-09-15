@@ -98,28 +98,34 @@ function shapesToMultiPolygon(shapes: DrawableShape[], options: OutlineOptions, 
   const parts: MultiPolygon[] = [];
   for (const shape of shapes) {
     const s = shape.style;
-
-    if ((options.includeFills ?? true) && s.fill !== 'none' && s.fill !== 'transparent') {
+    if ((options.includeFills ?? true) && isPainted(s.fill)) {
       parts.push(fillSegments(transformSegments(shape.segments, shape.transform), s.fillRule, tolerance));
     }
-    if (s.stroke !== 'none' && s.stroke !== 'transparent') {
+    if (isPainted(s.stroke)) {
       const width = options.strokeWidth ?? s.strokeWidth;
-      if (width > 0) {
-        const scale = matrixScale(shape.transform) || 1;
-        const rings: Ring[] = [];
-        for (const line of flattenSegments(shape.segments, tolerance / scale)) {
-          rings.push(...strokePolyline(line, {
-            width,
-            linecap: options.linecap ?? s.strokeLinecap,
-            linejoin: options.linejoin ?? s.strokeLinejoin,
-            miterLimit: options.miterLimit ?? s.strokeMiterlimit,
-          }, tolerance / scale));
-        }
-        parts.push(unionRings(rings.map((r) => r.map(([x, y]) => applyToPoint(shape.transform, x, y)))));
-      }
+      if (width > 0) parts.push(strokeShape(shape, width, options, tolerance));
     }
   }
   return unionMultiPolygons(parts);
+}
+
+function isPainted(paint: string): boolean {
+  return paint !== 'none' && paint !== 'transparent';
+}
+
+function strokeShape(shape: DrawableShape, width: number, options: OutlineOptions, tolerance: number): MultiPolygon {
+  const s = shape.style;
+  const scale = matrixScale(shape.transform) || 1;
+  const rings: Ring[] = [];
+  for (const line of flattenSegments(shape.segments, tolerance / scale)) {
+    rings.push(...strokePolyline(line, {
+      width,
+      linecap: options.linecap ?? s.strokeLinecap,
+      linejoin: options.linejoin ?? s.strokeLinejoin,
+      miterLimit: options.miterLimit ?? s.strokeMiterlimit,
+    }, tolerance / scale));
+  }
+  return unionRings(rings.map((r) => r.map(([x, y]) => applyToPoint(shape.transform, x, y))));
 }
 
 /**

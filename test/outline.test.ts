@@ -57,6 +57,14 @@ describe('outlinePathData', () => {
     expect(area(mp)).toBeCloseTo(8 + Math.PI / 2, 2);
   });
 
+  it('strokes a curve much thinner than the stroke into a solid disc', () => {
+    // radius 3 circle, width 30: the inner offset collapses and the result is a disc of radius 18
+    const mp = strokeSegments(parsePathData('M6 3a3 3 0 1 0 -6 0a3 3 0 1 0 6 0z'), { width: 30, linecap: 'butt', linejoin: 'miter', miterLimit: 4 }, 0.001);
+    expect(mp).toHaveLength(1);
+    expect(mp[0]).toHaveLength(1); // no hole
+    expect(area(mp)).toBeCloseTo(Math.PI * 18 * 18, 0);
+  });
+
   it('renders a dot for zero-length subpaths with round caps', () => {
     const mp = strokeSegments(parsePathData('M5 5L5 5'), { width: 2, linecap: 'round', linejoin: 'round', miterLimit: 4 }, 0.001);
     expect(area(mp)).toBeCloseTo(Math.PI, 1);

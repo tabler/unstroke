@@ -26,7 +26,21 @@ export interface IconEntry {
   ms: number;
 }
 
+/** Stroke widths for the variants, given for a 24-unit viewBox and scaled to each file's size. */
 export const WEIGHTS = [0.5, 1, 1.5];
+
+function viewBoxSize(svg: string): number {
+  const vb = /viewBox="([^"]*)"/.exec(svg)?.[1]?.trim().split(/[\s,]+/).map(Number);
+  if (vb && vb.length === 4) return Math.max(vb[2]!, vb[3]!);
+  const w = parseFloat(/\swidth="([^"]*)"/.exec(svg)?.[1] ?? '');
+  const h = parseFloat(/\sheight="([^"]*)"/.exec(svg)?.[1] ?? '');
+  return Math.max(w || 24, h || 24);
+}
+
+/** Sources above this size skip the extra stroke-width variants on the index page (large maps take seconds each). */
+const WEIGHT_VARIANTS_MAX_BYTES = 40_000;
+
+const cache = new Map<string, IconEntry>();
 
 function subdirs(dir: string): string[] {
   return readdirSync(dir).filter((d) => statSync(join(dir, d)).isDirectory()).sort();
@@ -40,8 +54,9 @@ function subdirs(dir: string): string[] {
  * already contains them.
  */
 export function listSets(): IconSet[] {
+  const rank = (name: string) => (name === 'tabler' ? 0 : 1);
   return [
-    ...subdirs(DEMO_ICONS).map((d) => ({ name: d, dir: join(DEMO_ICONS, d) })),
+    ...subdirs(DEMO_ICONS).sort((a, b) => rank(a) - rank(b) || a.localeCompare(b)).map((d) => ({ name: d, dir: join(DEMO_ICONS, d) })),
     ...subdirs(FIXTURES).filter((d) => d !== 'tabler').map((d) => ({ name: `fixtures-${d}`, dir: join(FIXTURES, d) })),
   ];
 }
@@ -62,7 +77,16 @@ function cleanSource(svg: string): string {
   return svg.replace(/<!--[\s\S]*?-->/g, '').trim();
 }
 
-export function convertIcon(set: IconSet, name: string, options: OutlineOptions): IconEntry {
+export function convertIcon(set: IconSet, name: string, options: OutlineOptions, withWeights = true): IconEntry {
+  const key = `${set.dir}/${name}?${JSON.stringify(options)}&w=${withWeights}`;
+  const cached = cache.get(key);
+  if (cached) return cached;
+  const entry = convertUncached(set, name, options, withWeights);
+  cache.set(key, entry);
+  return entry;
+}
+
+function convertUncached(set: IconSet, name: string, options: OutlineOptions, withWeights: boolean): IconEntry {
   const source = cleanSource(readFileSync(join(set.dir, `${name}.svg`), 'utf8'));
   const reference = options.strokeWidth
     ? source.replace(/stroke-width="[^"]*"/g, `stroke-width="${options.strokeWidth}"`)
@@ -71,7 +95,9 @@ export function convertIcon(set: IconSet, name: string, options: OutlineOptions)
   try {
     const outline = outlineSvg(source, options);
     const ms = performance.now() - start;
-    const weights = WEIGHTS.map((width) => ({ width, outline: outlineSvg(source, { ...options, strokeWidth: width }) }));
+    const weights = withWeights && source.length <= WEIGHT_VARIANTS_MAX_BYTES
+      ? WEIGHTS.map((width) => ({ width, outline: outlineSvg(source, { ...options, strokeWidth: (width * viewBoxSize(source)) / 24 }) }))
+      : [];
     return { name, set: set.name, source, reference, outline, optimized: optimizeSvg(outline), weights, ms };
   } catch (e) {
     return { name, set: set.name, source, reference, outline: '', optimized: '', weights: [], error: (e as Error).message, ms: performance.now() - start };

@@ -16,6 +16,12 @@ describe('tokenizePathData', () => {
     ]);
   });
 
+  it('allows a comma between implicit repeats', () => {
+    // seen in Wikimedia Commons files exported by Illustrator
+    expect(tokenizePathData('M91,114.1s-14.18-2.84-25.51,2.84-17,14.17-17,17,0,5.67,2.83,14.18S1 1 2 2')).toHaveLength(5);
+    expect(tokenizePathData('M0 0,1 1,2 2')).toHaveLength(3);
+  });
+
   it('parses arc flags without separators', () => {
     expect(tokenizePathData('M0 0a2 2 0 1112 0')).toEqual([
       { cmd: 'M', args: [0, 0] },

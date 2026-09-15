@@ -111,8 +111,12 @@ multipolygon (outer ring first, holes after).
 - `transform` on any element, including non-uniform scale (stroke width is
   scaled by the geometric mean of the matrix)
 - filled shapes with `nonzero` and `evenodd` fill rules
+- `<use>` (also into `<symbol>` and `<defs>`), and `<style>` sheets with simple
+  selectors (`tag`, `.class`, `#id`, `tag.class`, comma lists)
 
-Not supported yet: `use`, `text`, `image`, dashes, markers, clip paths, masks.
+Not supported yet: `text`, `image`, dashes, markers, clip paths, masks,
+opacity, CSS combinators. Colours are not kept: everything becomes one
+`currentColor` path.
 
 ## How it works
 
@@ -212,8 +216,9 @@ pnpm build
 micro segments, tight arcs, spirals, fills mixed with strokes, and every icon
 that broke Skia, Paper.js or the previous Tabler pipeline), icons from other
 open source sets with different conventions (Feather, Lucide, Heroicons,
-Iconoir; see `test/fixtures/open-source/SOURCES.md`) and hand-written files
-covering basic shapes, transforms, caps, joins and fill rules. For each
+Iconoir; see `test/fixtures/open-source/SOURCES.md`) and hand-written files covering basic shapes, transforms, caps,
+joins, fill rules, drawing direction, dots, self-intersections and
+degenerate input. For each
 one the test suite:
 
 1. converts it at stroke widths 0.5, 1, 1.5 and 2, writes each result to

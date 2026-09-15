@@ -29,12 +29,14 @@ export function tokenizePathData(d: string): RawCommand[] {
   };
 
   let cmd = '';
+  let implicit = false; // arguments continue the previous command without a new letter
   while (i < n) {
-    skipSeparators(false);
+    skipSeparators(implicit); // a comma may separate one implicit repeat from the next
     if (i >= n) break;
     const ch = d[i]!;
     if (/[a-zA-Z]/.test(ch)) {
       cmd = ch;
+      implicit = false;
       i++;
       if (!(cmd.toUpperCase() in ARG_COUNT)) throw new Error(`Invalid path command "${cmd}" at ${i - 1}`);
       if (cmd.toUpperCase() === 'Z') {
@@ -60,6 +62,7 @@ export function tokenizePathData(d: string): RawCommand[] {
       i = re.lastIndex;
     }
     out.push({ cmd, args });
+    implicit = true;
     // Implicit lineto after moveto
     if (cmd === 'M') cmd = 'L';
     else if (cmd === 'm') cmd = 'l';

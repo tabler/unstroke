@@ -52,7 +52,7 @@ const curves = (icon.outline.match(/C/g) ?? []).length;
   .overlay { position: relative; }
   .overlay :global(svg) { position: absolute; inset: 0; }
   .overlay :global(svg:last-child) { color: #dc2626; opacity: 0.7; }
-  .wire :global(path) { fill: none; stroke: var(--accent); stroke-width: 0.1; }
+  .wire :global(path) { fill: none; stroke: var(--accent); stroke-width: 1px; vector-effect: non-scaling-stroke; }
   pre { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
   h2 { font-size: 14px; margin: 24px 0 8px; }
 </style>
