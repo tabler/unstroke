@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/optimize.ts'],
+  entry: ['lib/index.ts', 'lib/optimize.ts'],
   format: ['esm', 'cjs'],
   dts: true,
   sourcemap: true,

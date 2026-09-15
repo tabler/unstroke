@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { outlineSvg } from '../src/index.js';
+import { outlineSvg } from '../lib/index.js';
 const file = process.argv[2]!;
 const svg = readFileSync(file, 'utf8');
 const t = performance.now();

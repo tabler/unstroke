@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { outlineSvg } from '../src/index.js';
+import { outlineSvg } from '../lib/index.js';
 import { mismatch, rasterize } from './helpers/raster.js';
 
 /**

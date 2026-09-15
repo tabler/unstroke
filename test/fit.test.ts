@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { fitRing, type FittedSegment } from '../src/output/fit.js';
-import { cubicPoint } from '../src/geometry/flatten.js';
-import { multiPolygonToPathData } from '../src/output/pathData.js';
-import type { Point } from '../src/geometry/types.js';
+import { fitRing, type FittedSegment } from '../lib/output/fit.js';
+import { cubicPoint } from '../lib/geometry/flatten.js';
+import { multiPolygonToPathData } from '../lib/output/pathData.js';
+import type { Point } from '../lib/geometry/types.js';
 
 const circle = (cx: number, cy: number, r: number, n: number): Point[] =>
   Array.from({ length: n }, (_, i) => [cx + r * Math.cos((i / n) * 2 * Math.PI), cy + r * Math.sin((i / n) * 2 * Math.PI)]);

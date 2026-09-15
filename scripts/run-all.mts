@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { outlineSvg } from '../src/index.js';
+import { outlineSvg } from '../lib/index.js';
 
 const SRC = process.argv[2] ?? '/Users/chomik/htdocs/tabler-icons/icons/outline';
 const files = readdirSync(SRC).filter((f) => f.endsWith('.svg'));

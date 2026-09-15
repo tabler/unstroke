@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { outlineSvg } from '../src/index.js';
+import { outlineSvg } from '../lib/index.js';
 
 const SRC = process.argv[2] ?? '/Users/chomik/htdocs/tabler-icons/icons/outline';
 const OLD = '/Users/chomik/htdocs/tabler-icons/packages/icons-webfont/icons-outlined/400';

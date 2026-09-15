@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { outlinePathData, outlineSvg, outlineSvgToMultiPolygon, strokeSegments, parsePathData } from '../src/index.js';
-import { parseSvg } from '../src/parse/svg.js';
-import { signedArea } from '../src/geometry/vec.js';
+import { outlinePathData, outlineSvg, outlineSvgToMultiPolygon, strokeSegments, parsePathData } from '../lib/index.js';
+import { parseSvg } from '../lib/parse/svg.js';
+import { signedArea } from '../lib/geometry/vec.js';
 
 const area = (mp: ReturnType<typeof outlineSvgToMultiPolygon>) =>
   mp.reduce((sum, poly) => sum + poly.reduce((s, ring, i) => s + (i === 0 ? 1 : -1) * Math.abs(signedArea(ring)), 0), 0);

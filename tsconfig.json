@@ -11,5 +11,5 @@
     "outDir": "dist",
     "types": ["node"]
   },
-  "include": ["src", "test", "scripts"]
+  "include": ["lib", "test", "scripts"]
 }

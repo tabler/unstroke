@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { Resvg } from '@resvg/resvg-js';
-import { outlineSvg } from '../src/index.js';
+import { outlineSvg } from '../lib/index.js';
 import { PNG } from 'pngjs';
 const SIZE = 384;
 const src = readFileSync(process.argv[2]!, 'utf8');

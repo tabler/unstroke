@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { parsePathData, tokenizePathData } from '../src/path/parse.js';
-import { parseTransform, transformSegments } from '../src/path/transform.js';
-import { shapeToSegments } from '../src/path/shapes.js';
-import { cubicPoint, flattenSegments } from '../src/geometry/flatten.js';
+import { parsePathData, tokenizePathData } from '../lib/path/parse.js';
+import { parseTransform, transformSegments } from '../lib/path/transform.js';
+import { shapeToSegments } from '../lib/path/shapes.js';
+import { cubicPoint, flattenSegments } from '../lib/geometry/flatten.js';
 
 describe('tokenizePathData', () => {
   it('expands implicit repeats and handles compact syntax', () => {

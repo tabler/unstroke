@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { parseSvg, flattenSegments, strokePolyline, transformSegments, unionRings } from '../src/index.js';
+import { parseSvg, flattenSegments, strokePolyline, transformSegments, unionRings } from '../lib/index.js';
 const svg = readFileSync(process.argv[2] ?? '/Users/chomik/htdocs/tabler-icons/icons/outline/abc.svg', 'utf8');
 const parsed = parseSvg(svg);
 let rings = 0, pts = 0;

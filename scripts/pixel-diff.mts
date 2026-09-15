@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
-import { outlineSvg } from '../src/index.js';
+import { outlineSvg } from '../lib/index.js';
 
 const SRC = process.argv[2] ?? '/Users/chomik/htdocs/tabler-icons/icons/outline';
 const SIZE = 192;

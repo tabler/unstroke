@@ -1,8 +1,8 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { outlineSvg } from '../src/index.js';
-import { optimizeSvg } from '../src/optimize.js';
+import { outlineSvg } from '../lib/index.js';
+import { optimizeSvg } from '../lib/optimize.js';
 import { mismatch, rasterize } from './helpers/raster.js';
 
 const DIR = join(import.meta.dirname, 'fixtures', 'tabler');
