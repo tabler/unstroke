@@ -4,40 +4,101 @@ on:
   push:
     branches: [main]
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+# Every job declares its own permissions; only `publish` gets the OIDC token.
+permissions: {}
 
-permissions:
-  contents: write
-  pull-requests: write
-  id-token: write
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  release:
-    name: Version or publish
+  # With pending changesets → "version" (open or update the Version packages PR).
+  # Without them and with an unpublished version in package.json → "publish".
+  select-mode:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      mode: ${{ steps.select-mode.outputs.mode }}
+      publish-plan-artifact-id: ${{ steps.select-mode.outputs.publish-plan-artifact-id }}
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-
+          persist-credentials: false
       - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: pnpm
-          registry-url: https://registry.npmjs.org
-
       - run: pnpm install --frozen-lockfile
+      - id: select-mode
+        uses: changesets/action/select-mode@v2
 
-      # With pending changesets this opens or updates the "Version Packages" PR
-      # (version bump + CHANGELOG). Once that PR is merged, it publishes to npm.
-      - uses: changesets/action@v1
+  version:
+    if: needs.select-mode.outputs.mode == 'version'
+    needs: select-mode
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
         with:
-          version: pnpm changeset:version
-          publish: pnpm changeset:publish
-          commit: 'Version packages'
-          title: 'Version packages'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: pnpm install --frozen-lockfile
+      - uses: changesets/action/version@v2
+        with:
+          commit-message: 'Version packages'
+          pr-title: 'Version packages'
+
+  # Build and pack in a job without the OIDC token; only the tarball moves on.
+  pack:
+    if: needs.select-mode.outputs.mode == 'publish'
+    needs: select-mode
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      pack-dir-artifact-id: ${{ steps.pack.outputs.pack-dir-artifact-id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - id: pack
+        uses: changesets/action/pack@v2
+        with:
+          publish-plan-artifact-id: ${{ needs.select-mode.outputs.publish-plan-artifact-id }}
+
+  # Trusted Publishing: npm accepts the GitHub OIDC token for this repository and
+  # workflow file (configured on npmjs.com under the package's Trusted Publisher
+  # settings), so no NPM_TOKEN secret is involved and provenance is attached.
+  publish:
+    needs: pack
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: pnpm install --frozen-lockfile
+      - uses: changesets/action/publish@v2
+        with:
+          pack-dir-artifact-id: ${{ needs.pack.outputs.pack-dir-artifact-id }}
+          create-github-releases: true

@@ -109,7 +109,14 @@ Documentation, demo and test-only changes need no changeset.
 
 On every push to `main` the release workflow collects pending changesets into
 a "Version packages" pull request that bumps `package.json` and updates
-`CHANGELOG.md`. Merging that pull request publishes the package to npm.
-`prepublishOnly` still runs `typecheck`, `test` and `build` before anything
-is uploaded. The package ships `dist/`, the README and the license; the
-`svgo` peer dependency stays optional.
+`CHANGELOG.md`. Merging that pull request publishes the package to npm and
+creates a GitHub release.
+
+Publishing uses npm's [Trusted Publishing](https://docs.npmjs.com/trusted-publishers):
+npm trusts the GitHub Actions identity of this repository's `release.yml`,
+so there is no npm token to store or rotate, and every release carries a
+provenance attestation linking it to the commit and workflow run. The
+workflow type-checks, tests and builds in a job without publish permissions,
+packs the tarball there, and only the publish job receives the OIDC token.
+The package ships `dist/`, the README and the license; the `svgo` peer
+dependency stays optional.

@@ -36,8 +36,7 @@
     "diff-image": "tsx scripts/diff-image.mts",
     "prepublishOnly": "pnpm typecheck && pnpm test && pnpm build",
     "changeset": "changeset",
-    "changeset:version": "changeset version",
-    "changeset:publish": "pnpm build && changeset publish"
+    "changeset:version": "changeset version"
   },
   "dependencies": {
     "clipper-lib": "^6.4.2"
