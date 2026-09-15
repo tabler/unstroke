@@ -1,9 +1,10 @@
 import { defineConfig } from 'vitepress';
 
 const SITE = 'https://unstroke.vercel.app';
-const DESCRIPTION = 'Convert stroked SVG into filled outlines with properly unioned paths.';
+const DESCRIPTION = 'Convert stroked SVG icons into filled outlines. Every stroke becomes a filled shape, overlaps are merged with a real boolean union, and each icon comes out as one clean path.';
 
 export default defineConfig({
+  lang: 'en',
   title: 'unstroke',
   description: DESCRIPTION,
   cleanUrls: true,
@@ -22,6 +23,19 @@ export default defineConfig({
     ['meta', { property: 'og:image:alt', content: 'unstroke: stroked SVG in, filled outlines out' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:image', content: `${SITE}/og.png` }],
+    ['script', { type: 'application/ld+json' }, JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareSourceCode',
+      name: 'unstroke',
+      description: DESCRIPTION,
+      url: SITE,
+      codeRepository: 'https://github.com/tabler/unstroke',
+      programmingLanguage: 'TypeScript',
+      runtimePlatform: 'Node.js',
+      license: 'https://opensource.org/licenses/MIT',
+      author: { '@type': 'Person', name: 'Paweł Kuna', url: 'https://github.com/codecalm' },
+      keywords: 'svg, stroke to path, outline stroke, icon font, boolean union, svg optimization',
+    })],
   ],
   // Per-page og:title / og:description / og:url (the static `head` above covers the rest).
   transformPageData(pageData) {
@@ -33,14 +47,18 @@ export default defineConfig({
       : `${pageData.title} | unstroke`;
     const description = pageData.description || pageData.frontmatter.description || DESCRIPTION;
     const path = pageData.relativePath.replace(/(^|\/)index\.md$/, '$1').replace(/\.md$/, '');
+    const url = `${SITE}/${path}`;
     pageData.frontmatter.head ??= [];
     pageData.frontmatter.head.push(
+      ['link', { rel: 'canonical', href: url }],
       ['meta', { property: 'og:title', content: title }],
       ['meta', { property: 'og:description', content: description }],
-      ['meta', { property: 'og:url', content: `${SITE}/${path}` }],
+      ['meta', { property: 'og:url', content: url }],
       ['meta', { name: 'twitter:title', content: title }],
       ['meta', { name: 'twitter:description', content: description }],
     );
+    // 150 near-identical per-icon pages would only dilute the index; the demo page itself stays indexable.
+    if (params?.name) pageData.frontmatter.head.push(['meta', { name: 'robots', content: 'noindex, follow' }]);
   },
   themeConfig: {
     nav: [

@@ -1,12 +1,13 @@
 ---
 layout: home
 title: unstroke
-titleTemplate: Stroked SVG in, filled outlines out
+titleTemplate: Convert stroked SVG to filled outlines
+description: unstroke turns stroked SVG icons into filled outlines. Every stroke becomes a filled shape, overlaps are merged with a real boolean union, and each icon comes out as one clean path for icon fonts, PDF export, laser cutting and design tools.
 
 hero:
   name: unstroke
   text: Stroked SVG in, filled outlines out.
-  tagline: Every stroke becomes a filled shape, overlaps are merged with a true boolean union, and the whole icon comes out as a single path with no self-overlaps.
+  tagline: Every stroke becomes a filled shape, the overlaps are merged with a real boolean union, and the whole icon comes out as one path with nothing overlapping itself.
   image:
     light: /hero.png
     dark: /hero-dark.png
@@ -23,14 +24,14 @@ hero:
       link: https://github.com/tabler/unstroke
 
 features:
-  - title: True union
-    details: The output is exactly the visible outline. One <code>&lt;path&gt;</code>, no overlapping subpaths, nothing for font engines or vector editors to choke on.
-  - title: Never fails
-    details: Polygons on an integer grid instead of curve booleans. Zero wrong outputs on the whole Tabler set, where Skia and Paper.js silently break icons.
+  - title: A real union
+    details: The output is the visible outline and nothing else. One <code>&lt;path&gt;</code>, no overlapping subpaths, so font engines and vector editors have nothing to trip over.
+  - title: It doesn't break
+    details: Polygons on an integer grid instead of booleans on curves. Zero wrong results on the whole Tabler set, where Skia and Paper.js quietly damage some icons.
   - title: Small files
-    details: Rings are refitted with cubic Béziers, so files are 50–60% smaller than Skia or Paper.js output and still pixel-accurate.
+    details: The rings are refitted with cubic Béziers, so the files come out 50–60% smaller than what Skia or Paper.js produce, and they're still pixel-accurate.
   - title: CLI and API
-    details: Batch a folder with <code>npx unstroke</code>, or call <code>outlineSvg</code> and <code>outlinePathData</code> from Node with full control over every option.
+    details: Run <code>npx unstroke</code> over a folder, or call <code>outlineSvg</code> and <code>outlinePathData</code> from Node with every option under your control.
 ---
 
 <HomeShowcase />
@@ -49,8 +50,8 @@ yarn add unstroke
 ```
 :::
 
-Convert a folder from the command line, or a string from code. Both take the
-same [options](/reference/options).
+You can convert a folder from the command line or a string from code. Both
+take the same [options](/reference/options).
 
 ::: code-group
 ```bash [CLI]
@@ -69,10 +70,11 @@ const d = outlinePathData('M3 13h4', { strokeWidth: 2, linecap: 'round' });
 
 The [getting started guide](/guide/getting-started) walks through both.
 
-## Measured against the alternatives
+## How it compares
 
-203 Tabler icons through every stroke-to-outline engine that could be scripted,
-the same SVGO pass on every result, then rasterized against the original.
+We ran 203 Tabler icons through every stroke-to-outline engine we could
+script, passed each result through the same SVGO step, and rasterized it
+against the original.
 
 | engine | avg bytes | mean pixel mismatch | wrong / failed |
 | --- | ---: | ---: | ---: |
@@ -81,20 +83,24 @@ the same SVGO pass on every result, then rasterized against the original.
 | Paper.js booleans | 1610 | 0.000% | 0 |
 | FontForge | 589 | 0.244% | 17 |
 
-FontForge is smaller only because it is imprecise. Skia and Paper.js are
-accurate on this sample but keep every fragment their intersections produce.
-On the full set of 5130 icons both curve-based engines silently break icons
-that `unstroke` gets right; the [full comparison](/reference/alternatives)
+FontForge wins on size only because it's imprecise. Skia and Paper.js are
+accurate on this sample, but they keep every fragment their intersections
+produce. On the full set of 5130 icons, both curve-based engines silently
+break icons that `unstroke` handles. The [full comparison](/reference/alternatives)
 and the [reasoning behind polygons](/reference/how-it-works#why-polygons-and-not-boolean-operations-on-curves)
-have the details.
+go into the details.
 
-## What it is for
+## What people use it for
 
-- **Icon fonts.** Glyphs have no stroke, and font engines reject or mangle
-  overlapping contours. The output is one clean contour set per icon.
-- **PDF, print and CNC.** Exporters, plotters and laser cutters that treat every
-  path as a fill, or that need the exact outline to cut along.
-- **Design tools without stroke support.** Anything that imports paths but
-  ignores `stroke-width`, or that renders strokes differently than a browser.
-- **One source, many weights.** Keep icons as strokes, generate the 1 px,
-  1.5 px and 2 px variants at build time with `--stroke-width`.
+Icon fonts, first of all. Glyphs have no concept of a stroke, and font engines
+either reject overlapping contours or render them wrong. `unstroke` gives you
+one clean set of contours per icon.
+
+PDF export, plotters and laser cutters. These treat every path as a fill, or
+they need the actual outline to cut along.
+
+Design tools that don't support strokes. Some import paths but ignore
+`stroke-width`, and some render strokes differently than a browser does.
+
+And one source for several weights. You keep the icons as strokes and generate
+the 1 px, 1.5 px and 2 px variants at build time with `--stroke-width`.

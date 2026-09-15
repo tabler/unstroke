@@ -17,11 +17,11 @@ const totalMs = computed(() => groups.reduce((s, g) => s + g.icons.reduce((t, i)
 
 <template>
   <p class="intro">
-    Every icon below is converted from the current library at build time. Each card shows the
-    <strong>source</strong> as drawn with strokes, the <strong>outline</strong> unstroke produces as a single
-    filled path, and an <strong>overlay</strong> of the source in blue on top of the outline drawn in grey. A perfect
-    result shows only blue; any grey fringe is a mismatch. The bottom row is the same
-    icon outlined at stroke widths 0.5, 1 and 1.5 from one source file.
+    Every icon below is converted from the current library when the site is built. Each card shows the
+    <strong>source</strong> as it was drawn, with strokes, then the <strong>outline</strong> that unstroke
+    makes from it as a single filled path, and an <strong>overlay</strong> with the source in blue on top of
+    the outline in grey. When the result is right you only see blue. Any grey fringe means a mismatch. The
+    bottom row is the same icon outlined at stroke widths 0.5, 1 and 1.5, all from the one source file.
   </p>
   <p class="stats">
     <span><strong>{{ shown }}</strong> icons</span>

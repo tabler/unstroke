@@ -7,9 +7,9 @@ const d = data;
   <section class="showcase">
     <h2>One icon, before and after</h2>
     <p class="lead">
-      A Tabler icon (<code>{{ d.name }}</code>): {{ d.sourceShapes }} stroked shapes in, one filled
-      <code>&lt;path&gt;</code> out. {{ d.outline.length }} bytes, {{ d.optimized.length }} after SVGO,
-      {{ d.ms.toFixed(1) }} ms.
+      This is the Tabler icon <code>{{ d.name }}</code>. It goes in as {{ d.sourceShapes }} stroked shapes and
+      comes out as one filled <code>&lt;path&gt;</code> of {{ d.outline.length }} bytes, or {{ d.optimized.length }}
+      after SVGO. The conversion took {{ d.ms.toFixed(1) }} ms.
     </p>
 
     <div class="compare">
@@ -28,23 +28,23 @@ const d = data;
 
     <h2>The problem, in one picture</h2>
     <p class="lead">
-      A stroke is covered by small polygons: one per segment, one per join, one per cap. Most converters
-      stop there and let the renderer's fill rule hide the overlaps. <code>unstroke</code> merges them
-      into the true outline before writing anything.
+      A stroke gets covered with small polygons, one per segment, one per join and one per cap. Most
+      converters stop right there and let the renderer's fill rule hide the overlaps. <code>unstroke</code>
+      merges them into the actual outline before it writes anything out.
     </p>
 
     <div class="union">
       <figure>
         <div class="checker pieces" v-html="d.pieces" />
-        <figcaption><strong>{{ d.pieceCount }} pieces</strong> before the union. Every overlap is a darker patch: this is what overlapping subpaths look like in a vector editor.</figcaption>
+        <figcaption><strong>{{ d.pieceCount }} pieces</strong> before the union. Every darker patch is an overlap. This is what overlapping subpaths look like when you open the file in a vector editor.</figcaption>
       </figure>
       <figure>
         <div class="checker pieces" v-html="d.outline" />
-        <figcaption><strong>{{ d.outlineSubpaths }} subpaths, {{ d.outlineCurves }} curves</strong> after the union and the curve fit. No overlaps, no fill-rule tricks, nothing to clean up.</figcaption>
+        <figcaption><strong>{{ d.outlineSubpaths }} subpaths, {{ d.outlineCurves }} curves</strong> after the union and the curve fit. There are no overlaps left and nothing to clean up.</figcaption>
       </figure>
       <figure>
         <div class="checker overlay" v-html="d.outline + d.source" />
-        <figcaption><strong>Overlay</strong> of the original stroke in blue over the result drawn in grey. A grey fringe on either side would be a mismatch; there is none.</figcaption>
+        <figcaption><strong>Overlay</strong> of the original stroke in blue over the result drawn in grey. A grey fringe on either side would mean a mismatch. There isn't one.</figcaption>
       </figure>
     </div>
   </section>

@@ -1,3 +1,8 @@
+---
+title: What is supported
+description: The SVG elements, stroke styles, transforms, fill rules and CSS features unstroke understands, and the ones it doesn't handle yet.
+---
+
 # What is supported
 
 - `path` (all commands, relative and absolute, arcs), `line`, `polyline`,
@@ -6,7 +11,7 @@
 - `stroke-linejoin`: miter (with `stroke-miterlimit`), round, bevel
 - inherited presentation attributes and inline `style`, `display:none`,
   `visibility:hidden`, `defs` and other non-rendered containers
-- `transform` on any element, including non-uniform scale (stroke width is
+- `transform` on any element, including non-uniform scale (the stroke width is
   scaled by the geometric mean of the matrix)
 - filled shapes with `nonzero` and `evenodd` fill rules
 - `<use>` (also into `<symbol>` and `<defs>`), and `<style>` sheets with simple
@@ -14,5 +19,5 @@
 
 ::: warning Not supported yet
 `text`, `image`, dashes, markers, clip paths, masks, opacity, CSS combinators.
-Colours are not kept: everything becomes one `currentColor` path.
+Colours aren't kept either: everything ends up as one `currentColor` path.
 :::

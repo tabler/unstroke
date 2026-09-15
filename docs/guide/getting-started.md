@@ -1,10 +1,15 @@
+---
+title: Getting started
+description: Install unstroke and convert your first stroked SVG icon to a filled outline, from the command line or from Node.
+---
+
 # Getting started
 
 `unstroke` converts stroked SVG into filled outlines. Every stroke becomes a
 filled shape, overlapping shapes are merged with a boolean union, and the whole
-icon comes out as a single `<path>` with no self-overlaps. That is what icon
-fonts, PDF exporters, laser cutters and design tools that cannot render strokes
-need.
+icon comes out as a single `<path>` that doesn't overlap itself. That's what
+icon fonts, PDF exporters, laser cutters and design tools without stroke
+support need.
 
 ## Install
 
@@ -20,9 +25,9 @@ yarn add unstroke
 ```
 :::
 
-Node 18 or newer is required. `svgo` (v4) is an optional peer dependency, used
-only by the [`unstroke/optimize`](/guide/optimize) entry point and the
-`--optimize` CLI flag.
+You need Node 18 or newer. `svgo` (v4) is an optional peer dependency. It's
+only used by the [`unstroke/optimize`](/guide/optimize) entry point and the
+`--optimize` CLI flag, so you can skip it if you don't need either.
 
 ## Convert a folder
 
@@ -30,8 +35,8 @@ only by the [`unstroke/optimize`](/guide/optimize) entry point and the
 npx unstroke icons/ -o outlined/
 ```
 
-The directory tree is mirrored into `outlined/`. See the
-[command line guide](/guide/cli) for every flag.
+The directory tree is mirrored into `outlined/`. The
+[command line guide](/guide/cli) lists every flag.
 
 ## Convert from code
 
@@ -41,14 +46,18 @@ import { outlineSvg } from 'unstroke';
 const filled = outlineSvg(svgSource);
 ```
 
-`outlineSvg` returns a new SVG string with the original root attributes, a
-`fill` attribute and a single path. See the [API guide](/guide/api).
+`outlineSvg` returns a new SVG string. It keeps the original root attributes,
+adds a `fill` attribute and contains a single path. The [API guide](/guide/api)
+has the rest.
 
-## Why another one?
+## Why another converter?
 
-Most existing converters offset each path segment separately and let the
-renderer's nonzero fill rule hide the overlaps. The output *looks* right but is
-made of dozens of overlapping subpaths: the file is bigger than it needs to be,
-font engines choke on it, and any edit in a vector editor shows the mess.
-`unstroke` computes the true union, so the output is exactly the visible outline
-and nothing else. The [alternatives page](/reference/alternatives) has numbers.
+Most existing converters offset each path segment on its own and rely on the
+renderer's nonzero fill rule to hide the overlaps. The result looks right on
+screen. Underneath, though, it's dozens of overlapping subpaths. The file is
+bigger than it needs to be, font engines choke on it, and the moment you open
+it in a vector editor you can see the mess.
+
+`unstroke` computes the actual union, so what you get is the visible outline
+and nothing more. The [alternatives page](/reference/alternatives) has the
+numbers.

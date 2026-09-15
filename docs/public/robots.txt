@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /icon/
+
+Sitemap: https://unstroke.vercel.app/sitemap.xml

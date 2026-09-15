@@ -1,3 +1,8 @@
+---
+title: Options
+description: Every option accepted by outlineSvg, outlinePathData and the unstroke CLI, with defaults.
+---
+
 # Options
 
 Every option accepted by `outlineSvg`, `outlinePathData` and the CLI.
@@ -17,5 +22,5 @@ Every option accepted by `outlineSvg`, `outlinePathData` and the CLI.
 | `precision`    | `3`              | decimal places in the output                                   |
 | `outerWinding` | `cw`             | winding of outer contours (`cw` on screen is what fonts expect)|
 
-The CLI exposes the same options in kebab-case (`--stroke-width`,
-`--fit-tolerance`, `--no-curves`, …).
+The CLI has the same options in kebab-case: `--stroke-width`,
+`--fit-tolerance`, `--no-curves` and so on.
