@@ -32,3 +32,10 @@
 }
 /* keep the artwork centred in its column instead of the theme's 32px up-left nudge */
 .VPHero .image-container { transform: none; }
+
+/* overlay comparison: the outline in a light neutral underneath, the source stroke in brand blue on top.
+   A perfect match shows only blue; a grey fringe on either side is a mismatch. */
+:root { --overlay-under: #c2c6cc; --overlay-over: #206bc4; }
+.dark { --overlay-under: #6b7280; --overlay-over: #4a9eff; }
+.overlay svg:first-child { color: var(--overlay-under); }
+.overlay svg:last-child { color: var(--overlay-over); opacity: 0.9; }

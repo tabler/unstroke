@@ -48,7 +48,6 @@ figure > div { aspect-ratio: 1; }
 figcaption { text-align: center; color: var(--vp-c-text-3); font-size: 13px; margin-top: 6px; }
 .overlay { position: relative; }
 .overlay :deep(svg) { position: absolute; inset: 0; }
-.overlay :deep(svg:last-child) { color: #dc2626; opacity: 0.7; }
 .wire :deep(path) { fill: none; stroke: var(--vp-c-brand-1); stroke-width: 1px; vector-effect: non-scaling-stroke; }
 .stats { display: flex; flex-wrap: wrap; gap: 12px 32px; margin: 20px 0 8px; }
 .stats div { margin: 0; }

@@ -44,7 +44,7 @@ const d = data;
       </figure>
       <figure>
         <div class="checker overlay" v-html="d.outline + d.source" />
-        <figcaption><strong>Overlay</strong> of the original stroke in red over the result. A red or dark fringe would be a mismatch; there is none.</figcaption>
+        <figcaption><strong>Overlay</strong> of the original stroke in blue over the result drawn in grey. A grey fringe on either side would be a mismatch; there is none.</figcaption>
       </figure>
     </div>
   </section>
@@ -69,7 +69,6 @@ pre { margin: 0; background: var(--vp-c-bg-soft); border: 1px solid var(--vp-c-d
 .pieces :deep(path) { fill: var(--vp-c-brand-1); fill-opacity: 0.18; stroke: var(--vp-c-brand-1); stroke-width: 1px; vector-effect: non-scaling-stroke; }
 .overlay { position: relative; }
 .overlay :deep(svg) { position: absolute; inset: 0; }
-.overlay :deep(svg:last-child) { color: #dc2626; opacity: 0.7; }
 
 @media (max-width: 767px) {
   .compare { grid-template-columns: 1fr; }

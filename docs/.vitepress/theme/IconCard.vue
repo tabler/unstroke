@@ -13,7 +13,7 @@ const saved = (from: number, to: number) => from > 0 ? Math.round((1 - to / from
     <div v-else class="row">
       <div class="checker" title="source (stroke)" v-html="icon.source" />
       <div class="checker" title="outline (fill)" v-html="icon.outline" />
-      <div class="checker overlay" title="overlay: source in red over outline" v-html="icon.outline + icon.reference" />
+      <div class="checker overlay" title="overlay: source in blue over the outline in grey" v-html="icon.outline + icon.reference" />
       <div v-for="w in icon.weights" :key="w.width" class="checker weight" :title="`outline at stroke-width ${w.width}`">
         <div v-html="w.outline" />
         <span>{{ w.width }}</span>
@@ -37,7 +37,6 @@ const saved = (from: number, to: number) => from > 0 ? Math.round((1 - to / from
 .row > div { aspect-ratio: 1; min-width: 0; overflow: hidden; }
 .overlay { position: relative; }
 .overlay :deep(svg) { position: absolute; inset: 0; }
-.overlay :deep(svg:last-child) { color: #dc2626; opacity: 0.7; }
 .weight { position: relative; }
 .weight > div { width: 100%; height: 100%; }
 .weight span { position: absolute; right: 4px; bottom: 2px; font-size: 11px; color: var(--vp-c-text-3); }
