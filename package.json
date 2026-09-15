@@ -43,6 +43,8 @@
     "clipper-lib": "^6.4.2"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
     "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^26.5.1",
     "@types/pngjs": "^6.0.5",
