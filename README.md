@@ -8,6 +8,7 @@
 # unstroke
 
 [![CI](https://github.com/tabler/unstroke/actions/workflows/ci.yml/badge.svg)](https://github.com/tabler/unstroke/actions/workflows/ci.yml)
+[![Demo](https://img.shields.io/badge/demo-unstroke.vercel.app-206bc4)](https://unstroke.vercel.app)
 
 Convert stroked SVG into filled outlines. Every stroke becomes a filled shape,
 overlapping shapes are merged with a boolean union, and the whole icon comes
@@ -251,8 +252,9 @@ converter from `lib/` on every request, so edits show up on reload. Drop
 another folder of SVGs into `preview/icons/` to see it there too.
 
 The demo is a static Astro site (`pnpm --filter svg-outliner-preview build`)
-deployed to Vercel by `.github/workflows/preview.yml`: every pull request gets
-a preview URL in a comment, every push to `main` updates the public demo.
+hosted at [unstroke.vercel.app](https://unstroke.vercel.app); Vercel builds it
+from this repository, so every pull request gets a preview deployment and
+every push to `main` updates the public demo.
 
 `scripts/pixel-diff.mts` rasterizes originals and outlines for a whole folder
 and reports the worst mismatches; `scripts/diff-image.mts <file>` renders one
