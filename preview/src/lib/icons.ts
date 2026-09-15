@@ -1,9 +1,22 @@
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { outlineSvg, type OutlineOptions } from '../../../lib/index.js';
 import { optimizeSvg } from '../../../lib/optimize.js';
 
-const ROOT = resolve(import.meta.dirname, '../../..');
+/**
+ * Repository root: walk up from the working directory until the workspace
+ * file is found. `import.meta.dirname` is useless here because the static
+ * build bundles this module into dist/.prerender/chunks.
+ */
+function findRoot(): string {
+  let dir = process.cwd();
+  for (let i = 0; i < 6; i++) {
+    if (existsSync(join(dir, 'pnpm-workspace.yaml'))) return dir;
+    dir = resolve(dir, '..');
+  }
+  throw new Error('Cannot find the repository root (pnpm-workspace.yaml)');
+}
+const ROOT = findRoot();
 const DEMO_ICONS = join(ROOT, 'preview/icons');
 const FIXTURES = join(ROOT, 'test/fixtures');
 

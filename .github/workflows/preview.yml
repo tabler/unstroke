@@ -1,0 +1,65 @@
+name: Deploy preview
+
+# Builds the static demo in preview/ and deploys it to Vercel: pull requests
+# get a preview URL, pushes to main go to production (the public demo).
+# Needs a VERCEL_TOKEN repository secret; the org and project ids are not
+# secret and live here.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  VERCEL_ORG_ID: team_I0NJ3E1NXaXggbpYF12JYOX6
+  VERCEL_PROJECT_ID: prj_SyuDqIxlg88jneH6RNZleyKzowyD
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: npm i -g vercel@latest
+
+      - name: Pull Vercel project settings
+        working-directory: preview
+        run: vercel pull --yes --environment=${{ github.event_name == 'push' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build the demo
+        working-directory: preview
+        run: pnpm build
+
+      - name: Deploy
+        id: deploy
+        working-directory: preview
+        run: |
+          url=$(vercel deploy --prebuilt --yes ${{ github.event_name == 'push' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deployed to $url" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment the preview URL on the pull request
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = '${{ steps.deploy.outputs.url }}';
+            const marker = '<!-- unstroke-preview -->';
+            const body = `${marker}\nDemo preview for this pull request: ${url}`;
+            const { data: comments } = await github.rest.issues.listComments({ ...context.repo, issue_number: context.issue.number });
+            const existing = comments.find((c) => c.body && c.body.startsWith(marker));
+            if (existing) await github.rest.issues.updateComment({ ...context.repo, comment_id: existing.id, body });
+            else await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body });

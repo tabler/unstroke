@@ -250,6 +250,10 @@ hand-made test fixtures. Query parameters override the conversion
 converter from `lib/` on every request, so edits show up on reload. Drop
 another folder of SVGs into `preview/icons/` to see it there too.
 
+The demo is a static Astro site (`pnpm --filter svg-outliner-preview build`)
+deployed to Vercel by `.github/workflows/preview.yml`: every pull request gets
+a preview URL in a comment, every push to `main` updates the public demo.
+
 `scripts/pixel-diff.mts` rasterizes originals and outlines for a whole folder
 and reports the worst mismatches; `scripts/diff-image.mts <file>` renders one
 icon side by side with a difference image.

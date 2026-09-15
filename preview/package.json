@@ -8,6 +8,7 @@
     "check": "astro check"
   },
   "dependencies": {
+    "@astrojs/vercel": "^11.0.10",
     "astro": "^7.3.2",
     "svgo": "^4.1.0"
   }

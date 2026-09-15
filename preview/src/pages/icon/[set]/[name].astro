@@ -1,8 +1,12 @@
 ---
 import Layout from '../../../components/Layout.astro';
-import { convertIcon, findSet, optionsFromQuery } from '../../../lib/icons';
+import { convertIcon, findSet, listIconNames, listSets, optionsFromQuery } from '../../../lib/icons';
 
-const params = Astro.url.searchParams;
+export function getStaticPaths() {
+  return listSets().flatMap((set) => listIconNames(set).map((name) => ({ params: { set: set.name, name } })));
+}
+
+const params = import.meta.env.DEV ? Astro.url.searchParams : new URLSearchParams();
 const set = findSet(Astro.params.set!);
 const name = Astro.params.name!;
 if (!set) return new Response('Unknown icon set', { status: 404 });
@@ -12,7 +16,7 @@ const curves = (icon.outline.match(/C/g) ?? []).length;
 ---
 <Layout title={name}>
   <main>
-    <p><a href={`/${Astro.url.search}`}>← all icons</a></p>
+    <p><a href={import.meta.env.DEV ? `/${Astro.url.search}` : '/'}>← all icons</a></p>
     <h1>{name}</h1>
     {icon.error ? <pre>{icon.error}</pre> : (
       <>

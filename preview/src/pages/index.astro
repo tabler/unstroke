@@ -3,11 +3,13 @@ import Layout from '../components/Layout.astro';
 import IconCard from '../components/IconCard.astro';
 import { convertIcon, listIconNames, listSets, optionsFromQuery } from '../lib/icons';
 
-const params = Astro.url.searchParams;
+// Query overrides (?width=, ?tolerance=, ?curves=0, ?q=, ?limit=) only work in `astro dev`;
+// the static build renders every icon with default options.
+const params = import.meta.env.DEV ? Astro.url.searchParams : new URLSearchParams();
 const options = optionsFromQuery(params);
 const q = (params.get('q') ?? '').toLowerCase();
-const limit = Number(params.get('limit')) || 200;
-const query = Astro.url.search;
+const limit = Number(params.get('limit')) || (import.meta.env.DEV ? 200 : Infinity);
+const query = import.meta.env.DEV ? Astro.url.search : '';
 
 const groups = listSets().map((set) => {
   const names = listIconNames(set).filter((n) => n.includes(q));
