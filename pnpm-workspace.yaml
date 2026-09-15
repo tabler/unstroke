@@ -1,2 +1,4 @@
 packages:
+  # the library itself lives at the root; listing it lets changesets see it
+  - '.'
   - docs

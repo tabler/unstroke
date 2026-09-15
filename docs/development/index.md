@@ -95,6 +95,21 @@ preview deployment and every push to `main` updates
 
 ## Releasing
 
-`pnpm publish` runs `typecheck`, `test` and `build` first through
-`prepublishOnly`. The package ships `dist/`, the README and the license; the
+Versions and the changelog are managed with
+[Changesets](https://github.com/changesets/changesets). A pull request that
+changes the library's behaviour includes a changeset:
+
+```bash
+pnpm changeset
+```
+
+It asks for the bump type (patch, minor, major) and a one-line summary, and
+writes a small markdown file into `.changeset/`. Commit it with the change.
+Documentation, demo and test-only changes need no changeset.
+
+On every push to `main` the release workflow collects pending changesets into
+a "Version packages" pull request that bumps `package.json` and updates
+`CHANGELOG.md`. Merging that pull request publishes the package to npm.
+`prepublishOnly` still runs `typecheck`, `test` and `build` before anything
+is uploaded. The package ships `dist/`, the README and the license; the
 `svgo` peer dependency stays optional.

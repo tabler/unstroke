@@ -64,8 +64,8 @@ pnpm build
 ```
 
 The [development page](https://unstroke.vercel.app/development/) covers the
-repository layout, the fixture tests, the diff tools and how the docs and
-demo are built.
+repository layout, the fixture tests, the diff tools, how the docs and demo
+are built and how releases are cut with Changesets.
 
 ### Tests on real files
 
