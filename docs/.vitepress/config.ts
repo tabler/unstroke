@@ -1,10 +1,43 @@
 import { defineConfig } from 'vitepress';
 
+const SITE = 'https://unstroke.vercel.app';
+const DESCRIPTION = 'Convert stroked SVG into filled outlines with properly unioned paths.';
+
 export default defineConfig({
   title: 'unstroke',
-  description: 'Convert stroked SVG into filled outlines with properly unioned paths.',
+  description: DESCRIPTION,
   cleanUrls: true,
   lastUpdated: true,
+  sitemap: { hostname: SITE },
+  head: [
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:site_name', content: 'unstroke' }],
+    ['meta', { property: 'og:image', content: `${SITE}/og.png` }],
+    ['meta', { property: 'og:image:width', content: '1280' }],
+    ['meta', { property: 'og:image:height', content: '640' }],
+    ['meta', { property: 'og:image:alt', content: 'unstroke: stroked SVG in, filled outlines out' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:image', content: `${SITE}/og.png` }],
+  ],
+  // Per-page og:title / og:description / og:url (the static `head` above covers the rest).
+  transformPageData(pageData) {
+    // Dynamic icon pages: title from the route params instead of the shared "Icon".
+    const params = pageData.params as { set?: string; name?: string } | undefined;
+    if (params?.name) pageData.title = `${params.name} (${params.set})`;
+    const title = pageData.frontmatter.layout === 'home'
+      ? 'unstroke'
+      : `${pageData.title} | unstroke`;
+    const description = pageData.description || pageData.frontmatter.description || DESCRIPTION;
+    const path = pageData.relativePath.replace(/(^|\/)index\.md$/, '$1').replace(/\.md$/, '');
+    pageData.frontmatter.head ??= [];
+    pageData.frontmatter.head.push(
+      ['meta', { property: 'og:title', content: title }],
+      ['meta', { property: 'og:description', content: description }],
+      ['meta', { property: 'og:url', content: `${SITE}/${path}` }],
+      ['meta', { name: 'twitter:title', content: title }],
+      ['meta', { name: 'twitter:description', content: description }],
+    );
+  },
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/getting-started', activeMatch: '/guide/' },
