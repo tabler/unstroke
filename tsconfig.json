@@ -9,7 +9,16 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "outDir": "dist",
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["lib", "test", "scripts"]
+  "include": [
+    "lib",
+    "test",
+    "scripts"
+  ],
+  "exclude": [
+    "scripts/experiment-*"
+  ]
 }
