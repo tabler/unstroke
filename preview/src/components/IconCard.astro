@@ -8,7 +8,7 @@ interface Props {
 const { icon, query } = Astro.props;
 ---
 <article class="card">
-  <a class="name" href={`/icon/${icon.name}${query}`}>{icon.name}</a>
+  <a class="name" href={`/icon/${icon.set}/${icon.name}${query}`}>{icon.name}</a>
   {icon.error ? (
     <pre class="error">{icon.error}</pre>
   ) : (

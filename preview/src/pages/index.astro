@@ -1,40 +1,58 @@
 ---
 import Layout from '../components/Layout.astro';
-import Controls from '../components/Controls.astro';
 import IconCard from '../components/IconCard.astro';
-import { convertIcon, findSet, listIconNames, optionsFromQuery } from '../lib/icons';
+import { convertIcon, listIconNames, listSets, optionsFromQuery } from '../lib/icons';
 
 const params = Astro.url.searchParams;
-const set = findSet(params.get('set'));
-if (!set) throw new Error('No icon sets found');
 const options = optionsFromQuery(params);
 const q = (params.get('q') ?? '').toLowerCase();
-const limit = Number(params.get('limit')) || 300;
-
-const names = listIconNames(set).filter((n) => n.includes(q));
-const icons = names.slice(0, limit).map((n) => convertIcon(set, n, options));
-const failed = icons.filter((i) => i.error).length;
-const totalMs = icons.reduce((s, i) => s + i.ms, 0);
+const limit = Number(params.get('limit')) || 200;
 const query = Astro.url.search;
+
+const groups = listSets().map((set) => {
+  const names = listIconNames(set).filter((n) => n.includes(q));
+  const icons = names.slice(0, limit).map((n) => convertIcon(set, n, options));
+  return { set, total: names.length, icons };
+}).filter((g) => g.total > 0);
+
+const showAll = (total: number) => {
+  const p = new URLSearchParams(params);
+  p.set('limit', String(total));
+  return `?${p}`;
+};
+
+const shown = groups.reduce((s, g) => s + g.icons.length, 0);
+const failed = groups.reduce((s, g) => s + g.icons.filter((i) => i.error).length, 0);
+const totalMs = groups.reduce((s, g) => s + g.icons.reduce((t, i) => t + i.ms, 0), 0);
 ---
-<Layout title={set.name}>
-  <header>
-    <h1>unstroke</h1>
-    <Controls params={params} current={set.name} />
-    <span class="muted">
-      {icons.length}{names.length > icons.length ? ` of ${names.length}` : ''} icons ·
-      {failed} failed · {(totalMs / Math.max(1, icons.length)).toFixed(1)} ms avg
-      {names.length > icons.length && <a href={`${query ? query + '&' : '?'}limit=${names.length}`}> · show all</a>}
-    </span>
-  </header>
+<Layout title="icons">
   <main>
-    <p class="muted">source (stroke) · outline (fill) · overlay (source in red over outline, any red or dark fringe is a mismatch)</p>
-    <div class="grid">
-      {icons.map((icon) => <IconCard icon={icon} query={query} />)}
-    </div>
+    <h1>unstroke</h1>
+    <p class="muted">
+      source (stroke) · outline (fill) · overlay (source in red over outline, any red or dark fringe is a mismatch)
+      · {shown} icons · {failed} failed · {(totalMs / Math.max(1, shown)).toFixed(1)} ms avg
+    </p>
+    {groups.map((g) => (
+      <section>
+        <h2>
+          {g.set.name}
+          <span class="muted">
+            {g.icons.length}{g.total > g.icons.length ? ` of ${g.total}` : ''}
+            {g.total > g.icons.length && <a href={showAll(g.total)}> · show all</a>}
+          </span>
+        </h2>
+        <div class="grid">
+          {g.icons.map((icon) => <IconCard icon={icon} query={query} />)}
+        </div>
+      </section>
+    ))}
   </main>
 </Layout>
 
 <style>
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  section { margin-bottom: 32px; }
+  h2 { font-size: 15px; margin: 0 0 12px; display: flex; gap: 10px; align-items: baseline; }
+  h2 .muted { font-weight: 400; font-size: 13px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
 </style>

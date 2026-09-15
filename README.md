@@ -208,7 +208,9 @@ pnpm build
 
 ### Tests on real files
 
-`test/fixtures/` holds real SVGs: a sample of Tabler icons and hand-written
+`test/fixtures/` holds real SVGs: the hardest Tabler icons (180° reversals,
+micro segments, tight arcs, spirals, fills mixed with strokes, and every icon
+that broke Skia, Paper.js or the previous Tabler pipeline) and hand-written
 files covering basic shapes, transforms, caps, joins and fill rules. For each
 one the test suite:
 
@@ -222,15 +224,14 @@ snapshot you review in a pull request.
 
 ### Visual preview
 
-`pnpm preview` starts an Astro dev server (http://localhost:4321) that shows
-every fixture as source, outline and an overlay of both, with stroke width,
-tolerance and curve fitting adjustable from the page. Pages run the converter
-from `lib/` on every request, so edits show up on reload. To browse other
-folders, list them in `preview/.env`:
-
-```
-ICON_DIRS=../tabler-icons/icons/outline:../tabler-icons/icons/filled
-```
+`pnpm preview` starts an Astro dev server (http://localhost:4321) with one
+page listing every icon as source, outline and an overlay of both: a
+representative selection of Tabler icons (the hard ones from the fixtures plus
+everyday ones, copied to `preview/icons/tabler`, MIT licensed) followed by the
+hand-made test fixtures. Query parameters override the conversion
+(`?width=1.5`, `?tolerance=0.02`, `?curves=0`, `?q=arrow`). Pages run the
+converter from `lib/` on every request, so edits show up on reload. Drop
+another folder of SVGs into `preview/icons/` to see it there too.
 
 `scripts/pixel-diff.mts` rasterizes originals and outlines for a whole folder
 and reports the worst mismatches; `scripts/diff-image.mts <file>` renders one

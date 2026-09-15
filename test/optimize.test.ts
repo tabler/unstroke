@@ -8,7 +8,7 @@ import { mismatch, rasterize } from './helpers/raster.js';
 const DIR = join(import.meta.dirname, 'fixtures', 'tabler');
 
 describe('optimizeSvg', () => {
-  it('keeps viewBox and fill, shrinks the file, renders the same', () => {
+  it('keeps viewBox and fill, shrinks the file, renders the same', { timeout: 60_000 }, () => {
     let before = 0;
     let after = 0;
     for (const file of readdirSync(DIR)) {

@@ -1,9 +1,10 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { basename, join, resolve } from 'node:path';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { outlineSvg, type OutlineOptions } from '../../../lib/index.js';
 import { optimizeSvg } from '../../../lib/optimize.js';
 
 const ROOT = resolve(import.meta.dirname, '../../..');
+const DEMO_ICONS = join(ROOT, 'preview/icons');
 const FIXTURES = join(ROOT, 'test/fixtures');
 
 export interface IconSet {
@@ -23,28 +24,26 @@ export interface IconEntry {
   ms: number;
 }
 
-/**
- * Icon sets available in the preview: every folder under test/fixtures plus
- * any extra folders listed in ICON_DIRS (colon-separated, relative to the
- * repository root), either as an environment variable or in preview/.env:
- *
- *   ICON_DIRS=../tabler-icons/icons/outline:../tabler-icons/icons/filled
- */
-export function listSets(): IconSet[] {
-  const sets: IconSet[] = readdirSync(FIXTURES)
-    .filter((d) => statSync(join(FIXTURES, d)).isDirectory())
-    .map((d) => ({ name: d, dir: join(FIXTURES, d) }));
-  const extraDirs = import.meta.env.ICON_DIRS ?? process.env.ICON_DIRS ?? '';
-  for (const extra of extraDirs.split(':').filter(Boolean)) {
-    const dir = resolve(ROOT, extra);
-    if (existsSync(dir)) sets.push({ name: basename(dir), dir });
-  }
-  return sets;
+function subdirs(dir: string): string[] {
+  return readdirSync(dir).filter((d) => statSync(join(dir, d)).isDirectory()).sort();
 }
 
-export function findSet(name: string | null): IconSet | undefined {
-  const sets = listSets();
-  return sets.find((s) => s.name === name) ?? sets[0];
+/**
+ * Icon sets shown in the preview: every folder under preview/icons (a
+ * representative selection of Tabler outline icons lives there, the hard
+ * ones from the test fixtures plus everyday ones) followed by the hand-made
+ * test fixtures. The Tabler fixtures are skipped because the demo folder
+ * already contains them.
+ */
+export function listSets(): IconSet[] {
+  return [
+    ...subdirs(DEMO_ICONS).map((d) => ({ name: d, dir: join(DEMO_ICONS, d) })),
+    ...subdirs(FIXTURES).filter((d) => d !== 'tabler').map((d) => ({ name: `fixtures-${d}`, dir: join(FIXTURES, d) })),
+  ];
+}
+
+export function findSet(name: string): IconSet | undefined {
+  return listSets().find((s) => s.name === name);
 }
 
 export function listIconNames(set: IconSet): string[] {
@@ -74,7 +73,7 @@ export function convertIcon(set: IconSet, name: string, options: OutlineOptions)
   }
 }
 
-/** Options taken from the query string, so the UI can override the stroke width etc. */
+/** Options taken from the query string: ?width=1.5&tolerance=0.02&curves=0 */
 export function optionsFromQuery(params: URLSearchParams): OutlineOptions {
   const options: OutlineOptions = {};
   const width = Number(params.get('width'));
