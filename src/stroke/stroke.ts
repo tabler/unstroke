@@ -113,12 +113,18 @@ function roundJoin(p: Point, d1: Point, d2: Point, turn: number, hw: number, tol
   const side = turn > 0 ? -1 : 1;
   const n1 = scale(perp(d1), side);
   const n2 = scale(perp(d2), side);
-  let a1 = Math.atan2(n1[1], n1[0]);
-  let a2 = Math.atan2(n2[1], n2[0]);
+  const a1 = Math.atan2(n1[1], n1[0]);
+  const a2 = Math.atan2(n2[1], n2[0]);
   let sweep = a2 - a1;
   // choose the short way round
   while (sweep > Math.PI) sweep -= 2 * Math.PI;
   while (sweep < -Math.PI) sweep += 2 * Math.PI;
+  // The arc must bulge to the outside of the corner, i.e. towards n1 + n2.
+  // For a 180° reversal that sum vanishes and the arc must bulge forward (along d1).
+  const bis: Point = [n1[0] + n2[0], n1[1] + n2[1]];
+  const ref: Point = Math.hypot(bis[0], bis[1]) > 1e-6 ? bis : d1;
+  const mid = a1 + sweep / 2;
+  if (Math.cos(mid) * ref[0] + Math.sin(mid) * ref[1] < 0) sweep -= Math.sign(sweep || 1) * 2 * Math.PI;
   const steps = arcSegments(hw, sweep, tolerance);
   const ring: Ring = [p];
   for (let i = 0; i <= steps; i++) {

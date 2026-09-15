@@ -3,3 +3,5 @@ dist
 coverage
 .DS_Store
 preview/*.html
+preview/*
+!preview/.gitkeep

@@ -51,6 +51,12 @@ describe('outlinePathData', () => {
     expect(area(mp)).toBeCloseTo(20 + 20 - 4, 6);
   });
 
+  it('draws a semicircle at a 180° reversal with round joins', () => {
+    // h-2h2: the path folds back on itself, SVG renders a round cap-like bulge at the tip
+    const mp = strokeSegments(parsePathData('M0 0h4h-4'), { width: 2, linecap: 'butt', linejoin: 'round', miterLimit: 4 }, 0.0001);
+    expect(area(mp)).toBeCloseTo(8 + Math.PI / 2, 2);
+  });
+
   it('renders a dot for zero-length subpaths with round caps', () => {
     const mp = strokeSegments(parsePathData('M5 5L5 5'), { width: 2, linecap: 'round', linejoin: 'round', miterLimit: 4 }, 0.001);
     expect(area(mp)).toBeCloseTo(Math.PI, 1);
