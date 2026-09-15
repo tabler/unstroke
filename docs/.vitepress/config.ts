@@ -66,6 +66,7 @@ export default defineConfig({
       { text: 'Reference', link: '/reference/options', activeMatch: '/reference/' },
       { text: 'Demo', link: '/demo/', activeMatch: '/(demo|icon)/' },
       { text: 'Development', link: '/development/', activeMatch: '/development/' },
+      { text: 'Sponsor', link: 'https://github.com/sponsors/codecalm' },
     ],
     sidebar: {
       '/guide/': sidebar(),
@@ -76,7 +77,10 @@ export default defineConfig({
     socialLinks: [{ icon: 'github', link: 'https://github.com/tabler/unstroke' }],
     editLink: { pattern: 'https://github.com/tabler/unstroke/edit/main/docs/:path' },
     search: { provider: 'local' },
-    footer: { message: 'Released under the MIT License.', copyright: 'Paweł Kuna' },
+    footer: {
+      message: 'Released under the MIT License. Part of <a href="https://tabler.io">Tabler</a>.',
+      copyright: 'Made by <a href="https://github.com/codecalm">Paweł Kuna</a> and funded by <a href="https://github.com/sponsors/codecalm">sponsors</a>.',
+    },
     outline: { level: [2, 3] },
   },
   vite: {

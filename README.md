@@ -100,6 +100,18 @@ and every push to `main` updates [unstroke.vercel.app](https://unstroke.vercel.a
 and reports the worst mismatches; `scripts/diff-image.mts <file>` renders one
 icon side by side with a difference image.
 
+## Sponsors
+
+unstroke is free to use, and its development is funded by sponsors. If it
+saves you time, consider [becoming a sponsor on GitHub](https://github.com/sponsors/codecalm)
+or [donating on PayPal](https://paypal.me/codecalm).
+
+<p align="center">
+<a href="https://github.com/sponsors/codecalm">
+<img src="https://raw.githubusercontent.com/tabler/sponsors/main/sponsors.svg" alt="Tabler sponsors">
+</a>
+</p>
+
 ## License
 
 MIT. Uses [clipper-lib](https://github.com/junmer/clipper-lib) (Boost Software License).

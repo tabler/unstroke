@@ -41,3 +41,7 @@
 .dark { --overlay-under: #6b7280; --overlay-over: #4a9eff; }
 .overlay svg:first-child { color: var(--overlay-under); }
 .overlay svg:last-child { color: var(--overlay-over); opacity: 0.9; }
+
+/* sponsors wall on the home page */
+.sponsors { display: block; margin: 16px 0 0; }
+.sponsors img { display: block; max-width: 100%; margin: 0 auto; }

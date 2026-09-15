@@ -104,3 +104,14 @@ Design tools that don't support strokes. Some import paths but ignore
 
 And one source for several weights. You keep the icons as strokes and generate
 the 1 px, 1.5 px and 2 px variants at build time with `--stroke-width`.
+
+## Sponsors
+
+unstroke is part of the [Tabler](https://tabler.io) family and, like the
+rest of it, is free to use. Its development is funded by sponsors. If it
+saves you time, consider [becoming a sponsor on GitHub](https://github.com/sponsors/codecalm)
+or [donating on PayPal](https://paypal.me/codecalm).
+
+<a class="sponsors" href="https://github.com/sponsors/codecalm" target="_blank" rel="noopener">
+  <img src="https://raw.githubusercontent.com/tabler/sponsors/main/sponsors.svg" alt="Tabler sponsors" loading="lazy">
+</a>
