@@ -19,6 +19,7 @@
     "scripts"
   ],
   "exclude": [
-    "scripts/experiment-*"
+    "scripts/experiment-*",
+    "scripts/compare-size.mts"
   ]
 }
