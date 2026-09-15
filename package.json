@@ -1,0 +1,50 @@
+{
+  "name": "svg-outliner",
+  "version": "0.0.0",
+  "description": "Convert stroked SVG into filled outlines with properly unioned paths",
+  "type": "module",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "preview": "node scripts/preview.mjs"
+  },
+  "dependencies": {
+    "clipper-lib": "^6.4.2"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^24.0.0",
+    "tsup": "^8.3.0",
+    "tsx": "^4.23.13",
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0"
+  },
+  "keywords": [
+    "svg",
+    "stroke",
+    "outline",
+    "fill",
+    "icons",
+    "webfont",
+    "path",
+    "union"
+  ]
+}
