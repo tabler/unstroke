@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { IconEntry } from '../lib/icons';
 defineProps<{ icon: IconEntry }>();
+
+const kb = (bytes: number) => bytes < 1000 ? `${bytes} B` : `${(bytes / 1000).toFixed(1)} kB`;
+const saved = (from: number, to: number) => from > 0 ? Math.round((1 - to / from) * 100) : 0;
 </script>
 
 <template>
@@ -16,10 +19,12 @@ defineProps<{ icon: IconEntry }>();
         <span>{{ w.width }}</span>
       </div>
     </div>
-    <div class="meta">
-      <span>{{ icon.outline.length }} B</span>
-      <span>{{ icon.optimized.length }} B optimized</span>
-      <span>{{ icon.ms.toFixed(1) }} ms</span>
+    <div v-if="!icon.error" class="meta">
+      <span :title="`${icon.outline.length} bytes as written, ${icon.optimized.length} after SVGO`">
+        {{ kb(icon.outline.length) }} → {{ kb(icon.optimized.length) }} with SVGO
+        <em v-if="saved(icon.outline.length, icon.optimized.length) > 0">−{{ saved(icon.outline.length, icon.optimized.length) }}%</em>
+      </span>
+      <span :title="'Conversion time on the build machine'">{{ icon.ms < 1 ? '<1' : icon.ms.toFixed(1) }} ms</span>
     </div>
   </a>
 </template>
@@ -36,6 +41,7 @@ defineProps<{ icon: IconEntry }>();
 .weight { position: relative; }
 .weight > div { width: 100%; height: 100%; }
 .weight span { position: absolute; right: 4px; bottom: 2px; font-size: 11px; color: var(--vp-c-text-3); }
-.meta { display: flex; gap: 10px; margin-top: 8px; font-size: 12px; color: var(--vp-c-text-3); }
+.meta { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; font-size: 12px; color: var(--vp-c-text-3); }
+.meta em { font-style: normal; color: var(--vp-c-green-1); margin-left: 4px; }
 .error { color: #dc2626; white-space: pre-wrap; font-size: 12px; margin: 0; }
 </style>
