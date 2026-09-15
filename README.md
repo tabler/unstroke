@@ -51,6 +51,23 @@ Stroke-related attributes are dropped.
 | `precision`    | `3`              | decimal places in the output                                   |
 | `outerWinding` | `cw`             | winding of outer contours (`cw` on screen is what fonts expect)|
 
+### Optimizing the output
+
+The path data is written as plain absolute commands. SVGO shrinks it by
+another ~25% (relative coordinates, shorthand commands); a ready-made pass
+lives in a separate entry point so the core library does not depend on SVGO.
+Install `svgo` (v4) alongside and:
+
+```ts
+import { outlineSvg } from 'svg-outliner';
+import { optimizeSvg } from 'svg-outliner/optimize';
+
+const small = optimizeSvg(outlineSvg(svgSource), { precision: 3 });
+```
+
+`svgoConfig(options)` returns the configuration used, so you can feed it to
+your own SVGO pipeline.
+
 ### Lower-level API
 
 The pipeline is exposed piece by piece for tools that need geometry rather

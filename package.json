@@ -12,6 +12,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./optimize": {
+      "types": "./dist/optimize.d.ts",
+      "import": "./dist/optimize.js",
+      "require": "./dist/optimize.cjs"
     }
   },
   "files": [
@@ -41,7 +46,8 @@
     "tsup": "^8.3.0",
     "tsx": "^4.23.13",
     "typescript": "^5.6.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.0",
+    "svgo": "^4.1.0"
   },
   "keywords": [
     "svg",
@@ -55,5 +61,13 @@
   ],
   "engines": {
     "node": ">=18"
+  },
+  "peerDependencies": {
+    "svgo": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "svgo": {
+      "optional": true
+    }
   }
 }
