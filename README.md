@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/cover-dark.png">
+    <img src=".github/cover.png" alt="unstroke: stroked SVG in, filled outlines out" width="100%">
+  </picture>
+</p>
+
 # unstroke
 
 [![CI](https://github.com/tabler/unstroke/actions/workflows/ci.yml/badge.svg)](https://github.com/tabler/unstroke/actions/workflows/ci.yml)
