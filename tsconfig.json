@@ -17,9 +17,5 @@
     "lib",
     "test",
     "scripts"
-  ],
-  "exclude": [
-    "scripts/experiment-*",
-    "scripts/compare-size.mts"
   ]
 }

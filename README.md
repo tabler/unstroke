@@ -139,10 +139,10 @@ Not supported yet: `use`, `text`, `image`, dashes, markers, clip paths, masks.
 
 ## Alternatives and output size
 
-`scripts/compare-size.mts` runs the same 203 Tabler icons (every 25th outline
-icon without filled paths) through every stroke-to-outline engine that could
-be scripted on this machine, passes each result through the same SVGO pass
-with 3 decimal places, and rasterizes it against the original:
+The same 203 Tabler icons (every 25th outline icon without filled paths) were
+run through every stroke-to-outline engine that could be scripted, each result
+was passed through the same SVGO pass with 3 decimal places and rasterized
+against the original:
 
 | engine | avg bytes after SVGO | avg curves | mean pixel mismatch | wrong / failed |
 | --- | ---: | ---: | ---: | ---: |
@@ -151,6 +151,7 @@ with 3 decimal places, and rasterizes it against the original:
 | Tabler webfont pipeline (svg-path-outline + Paper reorient) | 1344 | 21.8 | 0.058% | 11 |
 | Skia PathOps (CanvasKit) | 1721 | 34.0 | 0.000% | 0 |
 | Paper.js booleans | 1610 | 17.7 | 0.000% | 0 |
+| svg-outline-stroke (rasterize + potrace) | 685 | 16.0 | 3.960% | 202 |
 | FontForge (expand stroke + remove overlap) | 589 | 13.1 | 0.244% | 17 |
 
 FontForge produces the smallest files, but only because it is imprecise:
@@ -162,17 +163,19 @@ so their files are 50–60% larger. `unstroke` is the smallest output that is
 also pixel-accurate; raising `tolerance` trades accuracy for size in a
 controlled way (0.05 is already visible).
 
-Inkscape's `object-stroke-to-path` was not measured (not installed here);
-`outline-stroke` on npm delegates to FontForge and shares its results.
+`svg-outline-stroke` on npm does not outline at all: it rasterizes the SVG at
+its native size with sharp and traces the bitmap with potrace, so a 24 px
+icon comes back as a trace of a 24 x 24 pixel image. Every icon is visibly
+distorted. Inkscape's `object-stroke-to-path` was not measured.
 
 ## Why polygons and not boolean operations on curves?
 
 Tools like Figma or Illustrator offset curves directly and run their boolean
 operations on curves. That avoids the intermediate polygon, but curve-curve
 intersection is numerically fragile and every implementation carries a long
-tail of degenerate cases. The `scripts/experiment-*.mts` scripts try the
-alternatives on the full Tabler outline set (5130 icons, 49 of them with
-filled paths that the experiments skip):
+tail of degenerate cases. The alternatives were tried on the full Tabler
+outline set (5130 icons, 49 of them with filled paths that the experiments
+skipped):
 
 | engine | approach | wrong output | time / icon | after SVGO |
 | --- | --- | --- | --- | --- |
