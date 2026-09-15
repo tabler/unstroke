@@ -47,10 +47,12 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/getting-started', activeMatch: '/guide/' },
       { text: 'Reference', link: '/reference/options', activeMatch: '/reference/' },
       { text: 'Demo', link: '/demo/', activeMatch: '/(demo|icon)/' },
+      { text: 'Development', link: '/development/', activeMatch: '/development/' },
     ],
     sidebar: {
       '/guide/': sidebar(),
       '/reference/': sidebar(),
+    '/development/': sidebar(),
     },
     logo: '/favicon.svg',
     socialLinks: [{ icon: 'github', link: 'https://github.com/tabler/unstroke' }],
@@ -84,6 +86,12 @@ function sidebar() {
         { text: 'What is supported', link: '/reference/supported' },
         { text: 'How it works', link: '/reference/how-it-works' },
         { text: 'Alternatives and output size', link: '/reference/alternatives' },
+      ],
+    },
+    {
+      text: 'Development',
+      items: [
+        { text: 'Contributing', link: '/development/' },
       ],
     },
   ];

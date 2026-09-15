@@ -63,6 +63,10 @@ pnpm test
 pnpm build
 ```
 
+The [development page](https://unstroke.vercel.app/development/) covers the
+repository layout, the fixture tests, the diff tools and how the docs and
+demo are built.
+
 ### Tests on real files
 
 `test/fixtures/` holds real SVGs: the hardest Tabler icons (180° reversals,
