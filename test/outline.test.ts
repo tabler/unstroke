@@ -12,7 +12,7 @@ describe('outlinePathData', () => {
   });
 
   it('square caps extend by half the width', () => {
-    expect(outlinePathData('M0 0L10 0', { strokeWidth: 2, linecap: 'square' })).toBe('M-1 -1H11V1H-1Z');
+    expect(outlinePathData('M0 0L10 0', { strokeWidth: 2, linecap: 'square' })).toBe('M-1-1H11V1H-1Z');
   });
 
   it('round caps add a half disc of the right area', () => {

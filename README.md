@@ -43,6 +43,9 @@ Stroke-related attributes are dropped.
 | `linejoin`     | from the SVG     | override `stroke-linejoin`                                     |
 | `miterLimit`   | from the SVG     | override `stroke-miterlimit`                                   |
 | `tolerance`    | viewBox / 2400   | max deviation of flattened curves, in user units               |
+| `curves`       | `true`           | fit the result with cubic Béziers instead of emitting polygons |
+| `fitTolerance` | 2 × `tolerance`  | max deviation of the fitted curves from the exact polygon      |
+| `cornerAngle`  | `30`             | turn angle (degrees) above which a vertex stays a sharp corner |
 | `includeFills` | `true`           | also include shapes that already have a fill                   |
 | `fill`         | `currentColor`   | fill written on the output path                                |
 | `precision`    | `3`              | decimal places in the output                                   |
@@ -89,8 +92,18 @@ Not supported yet: `use`, `text`, `image`, dashes, markers, clip paths, masks.
    one join shape per vertex, one cap per open end. This has no special cases
    for self-intersections or curves tighter than the stroke width.
 4. All polygons are merged with a boolean union (Clipper, integer arithmetic,
-   so it never fails on degenerate input).
-5. The result is serialized as path data.
+   so it never fails on degenerate input). Pieces are built to overlap by
+   area rather than merely touch, because a vertex that rounds onto the wrong
+   side of a neighbouring edge would otherwise leave a hairline gap.
+5. Every ring of the result is fitted with lines and cubic Béziers: sharp
+   corners are detected by turn angle, straight runs become `L`/`H`/`V`, and
+   curved runs go through Schneider's algorithm (least-squares cubic, Newton
+   reparameterization, split at the point of largest error until the fit is
+   within tolerance). Tangents are estimated over a window rather than from
+   the nearest edge, because union output mixes tiny and long edges. The
+   error is checked along edges too, so a curve cannot bulge unnoticed between
+   two distant vertices of a straight edge.
+6. The result is serialized as compact absolute path data.
 
 ## Development
 

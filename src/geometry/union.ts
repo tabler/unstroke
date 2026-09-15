@@ -26,17 +26,30 @@ function orientPositive(path: IntPath): IntPath {
   return ClipperLib.Clipper.Orientation(path) ? path : path.slice().reverse();
 }
 
+/**
+ * Without the (very slow) StrictlySimple mode Clipper may leave zero-width
+ * spikes and degenerate rings in the result. CleanPolygons removes vertices
+ * that join collinear or reversing edges, which is exactly that.
+ */
+function clean(path: IntPath): Ring | null {
+  const cleaned = ClipperLib.Clipper.CleanPolygons([path], 2)[0];
+  if (!cleaned || cleaned.length < 3) return null;
+  return fromInt(cleaned);
+}
+
 function treeToMultiPolygon(tree: ClipperLib.PolyTree): MultiPolygon {
   const out: MultiPolygon = [];
   const visit = (node: ClipperLib.PolyNode) => {
     for (const child of node.Childs()) {
       if (child.IsHole()) continue; // holes are handled by their outer parent
-      const poly: Ring[] = [fromInt(child.Contour())];
+      const outer = clean(child.Contour());
+      const poly: Ring[] = outer ? [outer] : [];
       for (const hole of child.Childs()) {
-        poly.push(fromInt(hole.Contour()));
+        const h = clean(hole.Contour());
+        if (h && outer) poly.push(h);
         visit(hole); // islands inside holes are new outer polygons
       }
-      out.push(poly);
+      if (outer) out.push(poly);
     }
   };
   visit(tree);

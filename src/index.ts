@@ -19,6 +19,7 @@ export { flattenSegments } from './geometry/flatten.js';
 export { strokePolyline } from './stroke/stroke.js';
 export { unionRings, unionMultiPolygons, xorRings, nonzeroRings, differenceMultiPolygons } from './geometry/union.js';
 export { multiPolygonToPathData } from './output/pathData.js';
+export { fitRing, type FittedSegment, type FitOptions } from './output/fit.js';
 
 export interface OutlineOptions extends PathDataOptions {
   /** Override the stroke width for every stroked shape (e.g. to build multiple weights). */
@@ -32,6 +33,8 @@ export interface OutlineOptions extends PathDataOptions {
   /**
    * Maximum distance between the true curve and its flattened approximation, in
    * user units. Defaults to 1/2400 of the larger viewBox dimension (0.01 for a 24px icon).
+   * The curve fit that follows uses twice this value unless `fitTolerance` is set,
+   * so the output stays within about three times `tolerance` of the exact outline.
    */
   tolerance?: number;
   /** Include shapes that are already filled (fill != none) in the result. Default true. */
@@ -43,8 +46,9 @@ export interface OutlineOptions extends PathDataOptions {
 /** Convert a whole SVG document: every stroke becomes a filled outline, everything is unioned into one path. */
 export function outlineSvg(svg: string, options: OutlineOptions = {}): string {
   const parsed = parseSvg(svg);
-  const mp = shapesToMultiPolygon(parsed.shapes, options, defaultTolerance(parsed.viewBox, options));
-  const d = multiPolygonToPathData(mp, options);
+  const tolerance = defaultTolerance(parsed.viewBox, options);
+  const mp = shapesToMultiPolygon(parsed.shapes, options, tolerance);
+  const d = multiPolygonToPathData(mp, { fitTolerance: tolerance * 2, ...options });
   return serializeSvg(parsed.rootAttrs, d, options.fill ?? 'currentColor');
 }
 
@@ -70,7 +74,7 @@ export function outlinePathData(d: string, options: OutlinePathOptions): string 
     linejoin: options.linejoin ?? 'miter',
     miterLimit: options.miterLimit ?? 4,
   }, options.tolerance ?? 0.01);
-  return multiPolygonToPathData(mp, options);
+  return multiPolygonToPathData(mp, { fitTolerance: (options.tolerance ?? 0.01) * 2, ...options });
 }
 
 /** Stroke normalized segments and union the result. */
