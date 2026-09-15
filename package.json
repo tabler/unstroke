@@ -76,5 +76,14 @@
   },
   "bin": {
     "unstroke": "./dist/cli.js"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tabler/unstroke.git"
+  },
+  "homepage": "https://github.com/tabler/unstroke#readme",
+  "bugs": {
+    "url": "https://github.com/tabler/unstroke/issues"
+  },
+  "author": "Pawe\u0142 Kuna"
 }
