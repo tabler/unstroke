@@ -34,8 +34,8 @@ jobs:
       # (version bump + CHANGELOG). Once that PR is merged, it publishes to npm.
       - uses: changesets/action@v1
         with:
-          version: pnpm version
-          publish: pnpm release
+          version: pnpm changeset:version
+          publish: pnpm changeset:publish
           commit: 'Version packages'
           title: 'Version packages'
         env:
