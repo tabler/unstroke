@@ -100,6 +100,20 @@ pnpm test
 pnpm build
 ```
 
+### Tests on real files
+
+`test/fixtures/` holds real SVGs: a sample of Tabler icons and hand-written
+files covering basic shapes, transforms, caps, joins and fill rules. For each
+one the test suite:
+
+1. writes the converted SVG to `test/__output__/<group>/<name>.svg` and
+   compares it with the committed version (`pnpm vitest run -u` accepts changes),
+2. rasterizes the original and the outline and requires them to match within
+   0.05% of pixels.
+
+Drop a new `.svg` into a fixtures folder to cover it; the output file is the
+snapshot you review in a pull request.
+
 `scripts/preview.mts` renders a comparison page for a folder of icons and
 `scripts/pixel-diff.mts` rasterizes originals and outlines and reports the
 worst mismatches.

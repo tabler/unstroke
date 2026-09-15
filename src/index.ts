@@ -4,7 +4,7 @@ import { nonzeroRings, unionMultiPolygons, unionRings, xorRings } from './geomet
 import { multiPolygonToPathData, type PathDataOptions } from './output/pathData.js';
 import { type DrawableShape, parseSvg } from './parse/svg.js';
 import { parsePathData } from './path/parse.js';
-import { matrixScale, transformSegments } from './path/transform.js';
+import { applyToPoint, matrixScale, transformSegments } from './path/transform.js';
 import type { Segment } from './path/types.js';
 import { strokePolyline } from './stroke/stroke.js';
 
@@ -93,22 +93,29 @@ export function fillSegments(segments: Segment[], fillRule: 'nonzero' | 'evenodd
 function shapesToMultiPolygon(shapes: DrawableShape[], options: OutlineOptions, tolerance: number): MultiPolygon {
   const parts: MultiPolygon[] = [];
   for (const shape of shapes) {
-    const segments = transformSegments(shape.segments, shape.transform);
-    const scale = matrixScale(shape.transform);
     const s = shape.style;
 
     if ((options.includeFills ?? true) && s.fill !== 'none' && s.fill !== 'transparent') {
-      parts.push(fillSegments(segments, s.fillRule, tolerance));
+      parts.push(fillSegments(transformSegments(shape.segments, shape.transform), s.fillRule, tolerance));
     }
     if (s.stroke !== 'none' && s.stroke !== 'transparent') {
-      const width = (options.strokeWidth ?? s.strokeWidth) * scale;
+      const width = options.strokeWidth ?? s.strokeWidth;
       if (width > 0) {
-        parts.push(strokeSegments(segments, {
-          width,
-          linecap: options.linecap ?? s.strokeLinecap,
-          linejoin: options.linejoin ?? s.strokeLinejoin,
-          miterLimit: options.miterLimit ?? s.strokeMiterlimit,
-        }, tolerance));
+        // SVG strokes are applied in the element's own coordinate system and
+        // then transformed with it, so a non-uniform scale or skew changes the
+        // stroke's shape. Stroking locally and transforming the resulting
+        // polygons reproduces that exactly; the union is affine-invariant.
+        const scale = matrixScale(shape.transform) || 1;
+        const rings: Ring[] = [];
+        for (const line of flattenSegments(shape.segments, tolerance / scale)) {
+          rings.push(...strokePolyline(line, {
+            width,
+            linecap: options.linecap ?? s.strokeLinecap,
+            linejoin: options.linejoin ?? s.strokeLinejoin,
+            miterLimit: options.miterLimit ?? s.strokeMiterlimit,
+          }, tolerance / scale));
+        }
+        parts.push(unionRings(rings.map((r) => r.map(([x, y]) => applyToPoint(shape.transform, x, y)))));
       }
     }
   }

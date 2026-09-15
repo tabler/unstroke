@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="#000" stroke-width="3">
+  <path d="M4 6h12l-8 8" stroke-linecap="butt" stroke-linejoin="miter"/>
+  <path d="M20 6h12l-8 8" stroke-linecap="square" stroke-linejoin="bevel"/>
+  <path d="M36 6h8l-6 8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M4 26h12l-10 2" stroke-linejoin="miter" stroke-miterlimit="2"/>
+  <path d="M20 26h12l-10 2" stroke-linejoin="miter" stroke-miterlimit="20"/>
+  <path d="M40 26v0" stroke-linecap="round"/>
+  <path d="M40 34v0" stroke-linecap="square"/>
+  <path d="M4 40h12h-12" stroke-linejoin="round"/>
+  <path d="M20 40h12h-12" stroke-linejoin="miter"/>
+</svg>
