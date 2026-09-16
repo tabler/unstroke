@@ -41,9 +41,10 @@ docs/         this site (VitePress) and the demo icons in docs/icons/
 
 `test/fixtures/` holds real SVGs in three groups.
 
-`tabler/` has the hardest Tabler icons: 180° reversals, micro segments, tight
-arcs, spirals, fills mixed with strokes, and every icon that broke Skia,
-Paper.js or the previous Tabler pipeline.
+`tabler/` has the hardest icons from a large production set: 180° reversals,
+micro segments, tight arcs, spirals, fills mixed with strokes, and every icon
+that broke Skia, Paper.js or the webfont pipeline that came before this
+library.
 
 `open-source/` has icons from other sets with different conventions, such as
 stroke widths of 1.5, `<polyline>`, `<circle>` and `<rect>` elements, or stroke

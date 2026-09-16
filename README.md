@@ -79,9 +79,9 @@ are built and how releases are cut with Changesets.
 
 ### Tests on real files
 
-`test/fixtures/` holds real SVGs: the hardest Tabler icons (180° reversals,
+`test/fixtures/` holds real SVGs: the hardest icons from a large production set (180° reversals,
 micro segments, tight arcs, spirals, fills mixed with strokes, and every icon
-that broke Skia, Paper.js or the previous Tabler pipeline), icons from other
+that broke Skia, Paper.js or the previous webfont pipeline), icons from other
 open source sets with different conventions (Feather, Lucide, Heroicons,
 Iconoir; see `test/fixtures/open-source/SOURCES.md`) and hand-written files covering basic shapes, transforms, caps,
 joins, fill rules, drawing direction, dots, self-intersections and
@@ -118,7 +118,7 @@ or [donating on PayPal](https://paypal.me/codecalm).
 
 <p align="center">
 <a href="https://github.com/sponsors/codecalm">
-<img src="https://raw.githubusercontent.com/tabler/sponsors/main/sponsors.svg" alt="Tabler sponsors">
+<img src="https://raw.githubusercontent.com/tabler/sponsors/main/sponsors.svg" alt="Sponsors">
 </a>
 </p>
 

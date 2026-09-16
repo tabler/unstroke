@@ -38,8 +38,8 @@ Finally, the result is serialized as compact absolute path data.
 Tools like Figma or Illustrator offset curves directly and run their boolean
 operations on curves. That skips the intermediate polygon. The trouble is that
 curve-curve intersection is numerically fragile, and every implementation
-carries a long tail of degenerate cases. We tried the alternatives on the full
-Tabler outline set, 5130 icons (49 of them have filled paths that the
+carries a long tail of degenerate cases. We tried the alternatives on a full
+production set of 5130 outline icons (49 of them have filled paths that the
 experiments skipped):
 
 | engine | approach | wrong output | time / icon | after SVGO |

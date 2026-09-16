@@ -7,7 +7,7 @@ const groups = data;
 const shown = computed(() => groups.reduce((s, g) => s + g.icons.length, 0));
 const failed = computed(() => groups.reduce((s, g) => s + g.icons.filter((i) => i.error).length, 0));
 const LABELS: Record<string, string> = {
-  tabler: 'Tabler icons',
+  tabler: 'Sample icons',
   'fixtures-custom': 'Hand-made test cases',
   'fixtures-open-source': 'Other open source sets',
 };

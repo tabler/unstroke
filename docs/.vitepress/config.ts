@@ -87,7 +87,7 @@ export default defineConfig({
     editLink: { pattern: 'https://github.com/tabler/unstroke/edit/main/docs/:path' },
     search: { provider: 'local' },
     footer: {
-      message: 'Released under the MIT License. Part of <a href="https://tabler.io">Tabler</a>.',
+      message: 'Released under the MIT License.',
       copyright: 'Made by <a href="https://github.com/codecalm">Paweł Kuna</a> and funded by <a href="https://github.com/sponsors/codecalm">sponsors</a>.',
     },
     outline: { level: [2, 3] },

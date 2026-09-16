@@ -27,7 +27,7 @@ features:
   - title: A real union
     details: The output is the visible outline and nothing else. One <code>&lt;path&gt;</code>, no overlapping subpaths, so font engines and vector editors have nothing to trip over.
   - title: It doesn't break
-    details: Polygons on an integer grid instead of booleans on curves. Zero wrong results on the whole Tabler set, where Skia and Paper.js quietly damage some icons.
+    details: Polygons on an integer grid instead of booleans on curves. Zero wrong results across 5,130 production icons, where Skia and Paper.js quietly damage some of them.
   - title: Small files
     details: The rings are refitted with cubic Béziers, so the files come out 50–60% smaller than what Skia or Paper.js produce, and they're still pixel-accurate.
   - title: CLI and API
@@ -72,8 +72,8 @@ The [getting started guide](/guide/getting-started) walks through both.
 
 ## How it compares
 
-We ran 203 Tabler icons through every stroke-to-outline engine we could
-script, passed each result through the same SVGO step, and rasterized it
+We ran 203 icons from a production icon set through every stroke-to-outline
+engine we could script, passed each result through the same SVGO step, and rasterized it
 against the original.
 
 | engine | avg bytes | mean pixel mismatch | wrong / failed |
@@ -107,11 +107,10 @@ the 1 px, 1.5 px and 2 px variants at build time with `--stroke-width`.
 
 ## Sponsors
 
-unstroke is part of the [Tabler](https://tabler.io) family and, like the
-rest of it, is free to use. Its development is funded by sponsors. If it
+unstroke is free to use and its development is funded by sponsors. If it
 saves you time, consider [becoming a sponsor on GitHub](https://github.com/sponsors/codecalm)
 or [donating on PayPal](https://paypal.me/codecalm).
 
 <a class="sponsors" href="https://github.com/sponsors/codecalm" target="_blank" rel="noopener">
-  <img src="https://raw.githubusercontent.com/tabler/sponsors/main/sponsors.svg" alt="Tabler sponsors" loading="lazy">
+  <img src="https://raw.githubusercontent.com/tabler/sponsors/main/sponsors.svg" alt="Sponsors" loading="lazy">
 </a>
