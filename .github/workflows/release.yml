@@ -49,8 +49,13 @@ jobs:
         with:
           node-version: 24
       - run: pnpm install --frozen-lockfile
+      # With CHANGESETS_TOKEN (a fine-grained PAT or GitHub App token with contents
+      # and pull-requests write on this repo) the Version packages PR is authored by
+      # that identity and CI runs on it without manual approval. Falls back to the
+      # workflow token, which works but leaves the PR's CI waiting for "Approve and run".
       - uses: changesets/action/version@v2
         with:
+          github-token: ${{ secrets.CHANGESETS_TOKEN || github.token }}
           commit-message: 'Version packages'
           pr-title: 'Version packages'
 

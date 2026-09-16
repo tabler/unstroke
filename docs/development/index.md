@@ -119,7 +119,9 @@ change. Documentation, demo and test-only changes don't need one.
 On every push to `main` the release workflow collects the pending changesets
 into a "Version packages" pull request that bumps `package.json` and updates
 `CHANGELOG.md`. Merging that pull request publishes the package to npm and
-creates a GitHub release.
+creates a GitHub release. The pull request is opened with the
+`CHANGESETS_TOKEN` secret when it exists (a fine-grained token with contents
+and pull requests write access), so CI runs on it without manual approval.
 
 Publishing goes through npm's [Trusted Publishing](https://docs.npmjs.com/trusted-publishers).
 npm trusts the GitHub Actions identity of this repository's `release.yml`, so
