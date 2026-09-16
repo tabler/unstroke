@@ -191,7 +191,7 @@ function optionsFromValues(values: Values): OutlineOptions {
     cornerAngle: num(values, 'corner-angle'),
     precision: num(values, 'precision'),
     curves: !values['no-curves'],
-    includeFills: !values['no-fills'],
+    fills: !values['no-fills'],
     fill: values.fill,
   };
 }
