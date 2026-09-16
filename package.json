@@ -46,6 +46,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^26.5.1",
     "@types/pngjs": "^6.0.5",
+    "happy-dom": "^20.14.5",
     "pngjs": "^7.0.0",
     "svgo": "^4.1.0",
     "tsup": "^8.5.1",

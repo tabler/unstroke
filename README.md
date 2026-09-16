@@ -50,6 +50,9 @@ clip paths, opacity, several colours) is still converted,
 with a warning on stderr or through the `onWarning` option. `--strict` and
 `strict: true` turn those into failures instead.
 
+The library has no Node dependencies and also runs in the browser; only the
+CLI and the SVGO pass need Node.
+
 Everything else lives in the documentation at
 [unstroke.vercel.app](https://unstroke.vercel.app): every
 [option](https://unstroke.vercel.app/reference/options), the

@@ -19,7 +19,7 @@ more on Node 20.
 
 | command | what it does |
 | --- | --- |
-| `pnpm test` | vitest, including the fixture snapshots and pixel comparisons |
+| `pnpm test` | vitest, including the fixture snapshots, pixel comparisons and a browser-environment run |
 | `pnpm test:watch` | the same in watch mode |
 | `pnpm typecheck` | `tsc --noEmit` over `lib/`, `test/` and `scripts/` |
 | `pnpm build` | `dist/` with `index`, `optimize` and the `cli` entry |
