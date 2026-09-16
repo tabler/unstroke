@@ -25,9 +25,15 @@ yarn add unstroke
 ```
 :::
 
-You need Node 20 or newer. `svgo` (v4) is an optional peer dependency. It's
-only used by the [`unstroke/optimize`](/guide/optimize) entry point and the
-`--optimize` CLI flag, so you can skip it if you don't need either.
+You need Node 20 or newer for the CLI. `svgo` (v4) is an optional peer
+dependency. It's only used by the [`unstroke/optimize`](/guide/optimize) entry
+point and the `--optimize` CLI flag, so you can skip it if you don't need
+either.
+
+The library itself has no Node dependencies, so `outlineSvg` and
+`outlinePathData` also run in the browser, in a web worker or in an edge
+runtime. Bundle it like any other ESM package; the whole thing is about 50 kB
+before compression, most of which is the Clipper polygon clipper.
 
 ## Convert a folder
 
