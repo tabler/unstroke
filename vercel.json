@@ -5,5 +5,65 @@
   "buildCommand": "pnpm --filter unstroke-docs build",
   "outputDirectory": "docs/.vitepress/dist",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "<https://unstroke.vercel.app/llms.txt>; rel=\"alternate\"; type=\"text/markdown\""
+        }
+      ]
+    },
+    {
+      "source": "/guide/:page",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "<https://unstroke.vercel.app/guide/:page.md>; rel=\"alternate\"; type=\"text/markdown\""
+        }
+      ]
+    },
+    {
+      "source": "/reference/:page",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "<https://unstroke.vercel.app/reference/:page.md>; rel=\"alternate\"; type=\"text/markdown\""
+        }
+      ]
+    },
+    {
+      "source": "/development",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "<https://unstroke.vercel.app/development.md>; rel=\"alternate\"; type=\"text/markdown\""
+        }
+      ]
+    },
+    {
+      "source": "/:path*.md",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        },
+        {
+          "key": "Link",
+          "value": "<https://unstroke.vercel.app/:path*>; rel=\"alternate\"; type=\"text/html\""
+        }
+      ]
+    },
+    {
+      "source": "/(llms|llms-full).txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        }
+      ]
+    }
+  ]
 }

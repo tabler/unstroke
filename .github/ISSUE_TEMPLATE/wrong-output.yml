@@ -1,0 +1,40 @@
+name: Wrong or broken output
+description: An SVG that converts into something that does not match the original
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. The single most useful thing you can include is the SVG itself.
+  - type: textarea
+    id: svg
+    attributes:
+      label: The source SVG
+      description: Paste the file contents, or drag the .svg file into this field. If it is not yours to share, a reduced version that still shows the problem is fine.
+      render: xml
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What is wrong with the result
+      description: A screenshot of the original next to the outline helps. The demo page for a similar icon on unstroke.vercel.app/demo shows the kind of comparison that is useful.
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: How you ran it
+      placeholder: "npx unstroke icon.svg --stroke-width 1.5, or outlineSvg(src, { tolerance: 0.02 })"
+  - type: input
+    id: version
+    attributes:
+      label: unstroke version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: textarea
+    id: warnings
+    attributes:
+      label: Warnings printed
+      description: Anything unstroke printed on stderr, or passed to `onWarning`. Leave empty if there was none.

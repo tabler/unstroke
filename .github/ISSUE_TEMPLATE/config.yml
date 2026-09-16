@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security issue
+    url: https://github.com/tabler/unstroke/security/advisories/new
+    about: Report vulnerabilities privately, not in the issue tracker.
+  - name: Documentation
+    url: https://unstroke.vercel.app
+    about: Guides, options reference, how it works, and the live demo.
