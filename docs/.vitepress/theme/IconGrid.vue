@@ -34,6 +34,14 @@ const totalMs = computed(() => groups.reduce((s, g) => s + g.icons.reduce((t, i)
       <IconCard v-for="icon in g.icons" :key="icon.name" :icon="icon" />
     </div>
   </section>
+  <p class="credits">
+    The sample icons are from <a href="https://tabler.io/icons" rel="noopener">Tabler Icons</a> (MIT).
+    The open source test files come from <a href="https://github.com/feathericons/feather" rel="noopener">Feather</a> (MIT),
+    <a href="https://github.com/lucide-icons/lucide" rel="noopener">Lucide</a> (ISC),
+    <a href="https://github.com/tailwindlabs/heroicons" rel="noopener">Heroicons</a> (MIT) and
+    <a href="https://github.com/iconoir-icons/iconoir" rel="noopener">Iconoir</a> (MIT), unmodified;
+    the hand-made test cases are part of this repository.
+  </p>
 </template>
 
 <style scoped>
@@ -45,4 +53,6 @@ section { margin-bottom: 32px; }
 h2 { font-size: 15px; margin: 24px 0 12px; padding: 0; border: 0; display: flex; gap: 10px; align-items: baseline; }
 .count { font-weight: 400; font-size: 13px; color: var(--vp-c-text-3); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.credits { margin: 32px 0 0; font-size: 13px; line-height: 1.6; color: var(--vp-c-text-3); }
+.credits a { color: var(--vp-c-text-2); text-decoration: underline; text-underline-offset: 2px; }
 </style>
