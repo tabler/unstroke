@@ -26,8 +26,8 @@ hero:
 features:
   - title: A real union
     details: The output is the visible outline and nothing else. One <code>&lt;path&gt;</code>, no overlapping subpaths, so font engines and vector editors have nothing to trip over.
-  - title: It doesn't break
-    details: Polygons on an integer grid instead of booleans on curves. Zero wrong results across 5,130 production icons, where Skia and Paper.js quietly damage some of them.
+  - title: Predictable
+    details: Polygons on an integer grid instead of booleans on curves, so there is no curve-intersection edge case to hit and the error stays within a tolerance you choose. Pixel-checked against 5,130 production icons.
   - title: Small files
     details: The rings are refitted with cubic Béziers, so the files come out 50–60% smaller than what Skia or Paper.js produce, and they're still pixel-accurate.
   - title: CLI and API
