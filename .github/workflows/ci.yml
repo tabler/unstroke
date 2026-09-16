@@ -29,3 +29,17 @@ jobs:
 
       - name: Smoke-test the built CLI
         run: node dist/cli.js test/fixtures/tabler/x.svg | grep -q '<path d="M'
+
+  # The lowest Node version `engines` allows: tests only, the full job above runs on 24.
+  test-node-20:
+    name: Test on Node 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test

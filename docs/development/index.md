@@ -14,7 +14,8 @@ pnpm build
 ```
 
 The library is plain TypeScript in `lib/`, bundled with tsup into ESM, CJS
-and type declarations. It needs Node 20 or newer; CI runs on Node 24.
+and type declarations. It needs Node 20 or newer; CI runs everything on Node 24 and the tests once
+more on Node 20.
 
 | command | what it does |
 | --- | --- |
