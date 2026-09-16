@@ -7,7 +7,7 @@ const d = data;
   <section class="showcase">
     <h2>One icon, before and after</h2>
     <p class="lead">
-      This is the Tabler icon <code>{{ d.name }}</code>. It goes in as {{ d.sourceShapes }} stroked shapes and
+      This is <code>{{ d.name }}</code>, a 24 px icon from the test set. It goes in as {{ d.sourceShapes }} stroked shapes and
       comes out as one filled <code>&lt;path&gt;</code> of {{ d.outline.length }} bytes, or {{ d.optimized.length }}
       after SVGO. The conversion took {{ d.ms.toFixed(1) }} ms.
     </p>
