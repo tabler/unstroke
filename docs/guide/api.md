@@ -25,3 +25,9 @@ butt and miter.
 Both functions take the same [options object](/reference/options). If you
 need the geometry rather than the markup, there's a
 [lower-level API](/reference/lower-level) for that.
+
+If the input uses something a filled path can't reproduce, a dashed stroke or
+a `<text>` element for example, `outlineSvg` still returns a result and tells
+you about it through `onWarning`. Pass `strict: true` to get an
+`UnsupportedSvgError` instead. The [warnings section](/reference/options#warnings)
+lists what gets reported.

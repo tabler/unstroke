@@ -45,6 +45,11 @@ const thin = outlineSvg(svgSource, { strokeWidth: 1.5 });   // override the widt
 const d = outlinePathData('M3 13h4', { strokeWidth: 2, linecap: 'round' });
 ```
 
+Input that a filled path can't reproduce (dashed strokes, `<text>`, markers,
+clip paths, nested viewports, opacity, several colours) is still converted,
+with a warning on stderr or through the `onWarning` option. `--strict` and
+`strict: true` turn those into failures instead.
+
 Everything else lives in the documentation at
 [unstroke.vercel.app](https://unstroke.vercel.app): every
 [option](https://unstroke.vercel.app/reference/options), the

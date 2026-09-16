@@ -18,6 +18,12 @@ description: The SVG elements, stroke styles, transforms, fill rules and CSS fea
   selectors (`tag`, `.class`, `#id`, `tag.class`, comma lists)
 
 ::: warning Not supported yet
-`text`, `image`, dashes, markers, clip paths, masks, opacity, CSS combinators.
-Colours aren't kept either: everything ends up as one `currentColor` path.
+`text`, `image`, dashes, markers, clip paths, masks, filters, nested `<svg>`
+viewports, `vector-effect`, opacity, CSS combinators. Colours aren't kept
+either: everything ends up as one `currentColor` path.
 :::
+
+None of these fail silently. When the input uses one of them, the conversion
+still runs and reports a [warning](/reference/options#warnings) through
+`onWarning`, or throws if you pass `strict: true`. On the command line that's
+a line on stderr, or a failed file with `--strict`.

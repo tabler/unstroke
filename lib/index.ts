@@ -2,7 +2,7 @@ import { flattenSegments } from './geometry/flatten.js';
 import type { LineCap, LineJoin, MultiPolygon, Ring, StrokeStyle } from './geometry/types.js';
 import { nonzeroRings, unionMultiPolygons, unionRings, xorRings } from './geometry/union.js';
 import { multiPolygonToPathData, type PathDataOptions } from './output/pathData.js';
-import { type DrawableShape, type ParsedSvg, parseSvg } from './parse/svg.js';
+import { type DrawableShape, type ParsedSvg, parseSvg, type SvgWarning } from './parse/svg.js';
 import { parsePathData } from './path/parse.js';
 import { applyToPoint, matrixScale, transformSegments } from './path/transform.js';
 import type { Segment } from './path/types.js';
@@ -10,7 +10,7 @@ import { strokePolyline } from './stroke/stroke.js';
 
 export type { LineCap, LineJoin, MultiPolygon, Point, Polygon, Polyline, Ring, StrokeStyle } from './geometry/types.js';
 export type { Segment } from './path/types.js';
-export type { DrawableShape, ParsedSvg, ResolvedStyle } from './parse/svg.js';
+export type { DrawableShape, ParsedSvg, ParseSvgOptions, ResolvedStyle, SvgWarning, SvgWarningCode } from './parse/svg.js';
 export type { PathDataOptions } from './output/pathData.js';
 export { parseSvg } from './parse/svg.js';
 export { parsePathData, tokenizePathData } from './path/parse.js';
@@ -41,11 +41,39 @@ export interface OutlineOptions extends PathDataOptions {
   includeFills?: boolean;
   /** Fill colour written on the output path. Default `currentColor`. */
   fill?: string;
+  /**
+   * Called for every feature of the input that is not supported and changes
+   * how the result looks (dashes, text, markers, clip paths, nested viewports,
+   * opacity, several colours, …). Nothing is reported when the input only uses
+   * supported features. Without a handler the warnings are dropped.
+   */
+  onWarning?: (warning: SvgWarning) => void;
+  /**
+   * Throw an `UnsupportedSvgError` instead of producing a result when the input
+   * uses an unsupported feature. Default false. `onWarning` is still called first.
+   */
+  strict?: boolean;
+}
+
+/** Thrown in `strict` mode when the input uses a feature the outline cannot reproduce. */
+export class UnsupportedSvgError extends Error {
+  readonly warnings: SvgWarning[];
+  constructor(warnings: SvgWarning[]) {
+    super(warnings.map((w) => w.message).join('; '));
+    this.name = 'UnsupportedSvgError';
+    this.warnings = warnings;
+  }
+}
+
+function parseInput(svg: string, options: OutlineOptions): ParsedSvg {
+  const parsed = parseSvg(svg, { onWarning: options.onWarning });
+  if (options.strict && parsed.warnings.length > 0) throw new UnsupportedSvgError(parsed.warnings);
+  return parsed;
 }
 
 /** Convert a whole SVG document: every stroke becomes a filled outline, everything is unioned into one path. */
 export function outlineSvg(svg: string, options: OutlineOptions = {}): string {
-  const parsed = parseSvg(svg);
+  const parsed = parseInput(svg, options);
   const tolerance = effectiveTolerance(parsed, options);
   const mp = shapesToMultiPolygon(parsed.shapes, options, tolerance);
   const d = multiPolygonToPathData(mp, { fitTolerance: tolerance * 2, ...options });
@@ -54,7 +82,7 @@ export function outlineSvg(svg: string, options: OutlineOptions = {}): string {
 
 /** Same as {@link outlineSvg} but returns geometry instead of markup. */
 export function outlineSvgToMultiPolygon(svg: string, options: OutlineOptions = {}): MultiPolygon {
-  const parsed = parseSvg(svg);
+  const parsed = parseInput(svg, options);
   return shapesToMultiPolygon(parsed.shapes, options, effectiveTolerance(parsed, options));
 }
 

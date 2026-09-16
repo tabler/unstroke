@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, join, relative, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
-import { outlineSvg, type OutlineOptions } from './index.js';
+import { outlineSvg, type OutlineOptions, type SvgWarning } from './index.js';
 
 const HELP = `unstroke - convert stroked SVG into filled outlines
 
@@ -31,7 +31,10 @@ Geometry
 
 Other
   --optimize               run SVGO on the result (requires the svgo package)
-  -q, --quiet              no progress output
+  --strict                 fail on input that uses unsupported features (dashes, text,
+                           markers, clip paths, nested viewports, opacity, several colours)
+                           instead of converting it with a warning
+  -q, --quiet              no progress output (warnings are still printed)
   -h, --help               show this help
   -v, --version            show the version
 `;
@@ -101,10 +104,18 @@ export async function run(argv: string[], io: CliIo = { stdout: (s) => process.s
   }
 
   let failed = 0;
+  let warned = 0;
   const start = performance.now();
   for (const job of jobs) {
+    const shown = relative(process.cwd(), job.input) || job.input;
+    let jobWarned = false;
+    const onWarning = (w: SvgWarning) => {
+      if (!values.strict) io.stderr(`${shown}: warning: ${w.message}\n`);
+      jobWarned = true;
+    };
     try {
-      let svg = outlineSvg(readFileSync(job.input, 'utf8'), options);
+      let svg = outlineSvg(readFileSync(job.input, 'utf8'), { ...options, onWarning, strict: values.strict });
+      if (jobWarned) warned++;
       if (optimize) svg = optimize(svg);
       if (job.output === null) {
         io.stdout(svg + '\n');
@@ -119,7 +130,8 @@ export async function run(argv: string[], io: CliIo = { stdout: (s) => process.s
   }
   if (!values.quiet && jobs.some((j) => j.output !== null)) {
     const ms = ((performance.now() - start) / 1000).toFixed(1);
-    io.stderr(`${jobs.length - failed} of ${jobs.length} files converted in ${ms}s${failed ? `, ${failed} failed` : ''}\n`);
+    const notes = [failed ? `${failed} failed` : '', warned ? `${warned} with warnings` : ''].filter(Boolean);
+    io.stderr(`${jobs.length - failed} of ${jobs.length} files converted in ${ms}s${notes.length ? `, ${notes.join(', ')}` : ''}\n`);
   }
   return failed ? 1 : 0;
 }
@@ -142,6 +154,7 @@ const SPEC = {
     'no-fills': { type: 'boolean' },
     fill: { type: 'string' },
     optimize: { type: 'boolean' },
+    strict: { type: 'boolean' },
     quiet: { type: 'boolean', short: 'q' },
     help: { type: 'boolean', short: 'h' },
     version: { type: 'boolean', short: 'v' },
