@@ -24,7 +24,9 @@ butt and miter.
 
 Both functions take the same [options object](/reference/options). If you
 need the geometry rather than the markup, there's a
-[lower-level API](/reference/lower-level) for that.
+[lower-level API](/reference/lower-level) for that. The functions on this
+page, the options, the warnings and the CLI are the stable API and follow
+semver; the lower-level exports can change in a minor release.
 
 If the input uses something a filled path can't reproduce, a dashed stroke or
 a `<text>` element for example, `outlineSvg` still returns a result and tells
