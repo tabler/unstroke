@@ -25,7 +25,7 @@ yarn add unstroke
 ```
 :::
 
-You need Node 18 or newer. `svgo` (v4) is an optional peer dependency. It's
+You need Node 20 or newer. `svgo` (v4) is an optional peer dependency. It's
 only used by the [`unstroke/optimize`](/guide/optimize) entry point and the
 `--optimize` CLI flag, so you can skip it if you don't need either.
 
