@@ -39,8 +39,6 @@ export interface OutlineOptions extends PathDataOptions {
   tolerance?: number;
   /** Include shapes that are already filled (fill != none) in the result. Default true. `--no-fills` on the CLI. */
   fills?: boolean;
-  /** @deprecated Renamed to `fills`. */
-  includeFills?: boolean;
   /** Fill colour written on the output path. Default `currentColor`. */
   fill?: string;
   /**
@@ -128,7 +126,7 @@ function shapesToMultiPolygon(shapes: DrawableShape[], options: OutlineOptions, 
   const parts: MultiPolygon[] = [];
   for (const shape of shapes) {
     const s = shape.style;
-    if ((options.fills ?? options.includeFills ?? true) && isPainted(s.fill)) {
+    if ((options.fills ?? true) && isPainted(s.fill)) {
       parts.push(fillSegments(transformSegments(shape.segments, shape.transform), s.fillRule, tolerance));
     }
     if (isPainted(s.stroke)) {

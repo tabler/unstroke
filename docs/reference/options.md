@@ -26,8 +26,7 @@ Every option accepted by `outlineSvg`, `outlinePathData` and the CLI.
 
 The CLI has the same options in kebab-case: `--stroke-width`,
 `--fit-tolerance`, `--no-curves`, `--no-fills` and so on. `onWarning` maps to
-warnings on stderr and `strict` to `--strict`. `fills` used to be called
-`includeFills`; the old name still works but is deprecated.
+warnings on stderr and `strict` to `--strict`.
 
 ## Warnings
 
