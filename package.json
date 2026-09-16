@@ -82,7 +82,7 @@
     "type": "git",
     "url": "git+https://github.com/tabler/unstroke.git"
   },
-  "homepage": "https://github.com/tabler/unstroke#readme",
+  "homepage": "https://unstroke.vercel.app",
   "bugs": {
     "url": "https://github.com/tabler/unstroke/issues"
   },
