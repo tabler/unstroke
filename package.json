@@ -1,6 +1,6 @@
 {
   "name": "unstroke",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Convert stroked SVG into filled outlines with properly unioned paths",
   "type": "module",
   "license": "MIT",
