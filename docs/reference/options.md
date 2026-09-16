@@ -17,7 +17,7 @@ Every option accepted by `outlineSvg`, `outlinePathData` and the CLI.
 | `curves`       | `true`           | fit the result with cubic Béziers instead of emitting polygons |
 | `fitTolerance` | 2 × `tolerance`  | max deviation of the fitted curves from the exact polygon      |
 | `cornerAngle`  | `30`             | turn angle (degrees) above which a vertex stays a sharp corner |
-| `includeFills` | `true`           | also include shapes that already have a fill                   |
+| `fills`        | `true`           | also include shapes that already have a fill (`--no-fills`)     |
 | `fill`         | `currentColor`   | fill written on the output path                                |
 | `precision`    | `3`              | decimal places in the output                                   |
 | `outerWinding` | `cw`             | winding of outer contours (`cw` on screen is what fonts expect)|
@@ -25,8 +25,9 @@ Every option accepted by `outlineSvg`, `outlinePathData` and the CLI.
 | `strict`       | `false`          | throw instead of converting when the input has such a feature  |
 
 The CLI has the same options in kebab-case: `--stroke-width`,
-`--fit-tolerance`, `--no-curves` and so on. `onWarning` maps to warnings on
-stderr and `strict` to `--strict`.
+`--fit-tolerance`, `--no-curves`, `--no-fills` and so on. `onWarning` maps to
+warnings on stderr and `strict` to `--strict`. `fills` used to be called
+`includeFills`; the old name still works but is deprecated.
 
 ## Warnings
 
