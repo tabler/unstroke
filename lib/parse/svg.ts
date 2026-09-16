@@ -46,8 +46,6 @@ export type SvgWarningCode =
   | 'clip-path'
   /** filter: ignored. */
   | 'filter'
-  /** A nested <svg> with its own viewBox or viewport: rendered without the viewport transform. */
-  | 'nested-svg'
   /** vector-effect="non-scaling-stroke": the stroke width is scaled with the transform anyway. */
   | 'vector-effect'
   /** opacity, stroke-opacity or fill-opacity below 1: the result is fully opaque. */
@@ -145,6 +143,59 @@ function indexDocument(root: XmlElement): { ids: Map<string, XmlElement>; css: s
   return { ids, css };
 }
 
+/** Size of the viewport an element's percentages and nested viewports refer to. */
+interface Viewport { width: number; height: number }
+
+function parseViewBox(v: string | undefined): [number, number, number, number] | null {
+  if (!v) return null;
+  const parts = v.trim().split(/[\s,]+/).map(Number);
+  return parts.length === 4 && parts.every(Number.isFinite) && parts[2]! > 0 && parts[3]! > 0
+    ? (parts as [number, number, number, number])
+    : null;
+}
+
+/** A length that may be a percentage of the given reference size. */
+function parseSize(v: string | undefined, reference: number, fallback: number): number {
+  if (v == null || v.trim() === '' || v.trim() === 'auto') return fallback;
+  const n = parseFloat(v);
+  if (!Number.isFinite(n)) return fallback;
+  return v.trim().endsWith('%') ? (n / 100) * reference : n;
+}
+
+/**
+ * Transform that maps a viewBox onto a viewport of the given size at (x, y),
+ * honouring preserveAspectRatio (default `xMidYMid meet`). This is what a
+ * nested <svg>, or a <symbol> instantiated by <use>, applies to its content.
+ */
+function viewportTransform(
+  x: number, y: number, width: number, height: number,
+  viewBox: [number, number, number, number] | null,
+  par: string | undefined,
+): Matrix {
+  if (!viewBox) return [1, 0, 0, 1, x, y];
+  const [vx, vy, vw, vh] = viewBox;
+  const parts = (par ?? '').trim().split(/\s+/).filter(Boolean);
+  const align = parts[0] ?? 'xMidYMid';
+  const meetOrSlice = parts[1] ?? 'meet';
+  let sx = width / vw;
+  let sy = height / vh;
+  if (align !== 'none') {
+    const s = meetOrSlice === 'slice' ? Math.max(sx, sy) : Math.min(sx, sy);
+    sx = sy = s;
+  }
+  let tx = x - vx * sx;
+  let ty = y - vy * sy;
+  if (align !== 'none') {
+    const ax = align.slice(1, 4);
+    const ay = align.slice(5, 8);
+    if (ax === 'Mid') tx += (width - vw * sx) / 2;
+    else if (ax === 'Max') tx += width - vw * sx;
+    if (ay === 'Mid') ty += (height - vh * sy) / 2;
+    else if (ay === 'Max') ty += height - vh * sy;
+  }
+  return [sx, 0, 0, sy, tx, ty];
+}
+
 function isPainted(paint: string | undefined): boolean {
   return paint != null && paint !== 'none' && paint !== 'transparent';
 }
@@ -159,14 +210,11 @@ export function parseSvg(svg: string, options: ParseSvgOptions = {}): ParsedSvg 
   const root = doc.children.find((c): c is XmlElement => c.type === 'element' && c.tag === 'svg');
   if (!root) throw new Error('No <svg> root element found');
 
-  const viewBoxAttr = root.attrs.viewBox;
-  let viewBox: ParsedSvg['viewBox'] = null;
-  if (viewBoxAttr) {
-    const parts = viewBoxAttr.trim().split(/[\s,]+/).map(Number);
-    if (parts.length === 4 && parts.every(Number.isFinite)) {
-      viewBox = parts as [number, number, number, number];
-    }
-  }
+  const viewBox = parseViewBox(root.attrs.viewBox);
+  // The root viewport: the viewBox size, else width/height, else the SVG default of 300 x 150.
+  const rootViewport: Viewport = viewBox
+    ? { width: viewBox[2], height: viewBox[3] }
+    : { width: parseSize(root.attrs.width, 300, 300), height: parseSize(root.attrs.height, 150, 150) };
 
   const { ids, css } = indexDocument(root);
   const rules = parseCss(css);
@@ -186,7 +234,7 @@ export function parseSvg(svg: string, options: ParseSvgOptions = {}): ParsedSvg 
   const paints = new Set<string>();
 
   /** Presentation properties that change the rendering in ways the outline cannot reproduce. */
-  const checkProps = (props: Record<string, string>, tag: string, style: ResolvedStyle) => {
+  const checkProps = (props: Record<string, string>, tag: string, style: ResolvedStyle, isRoot: boolean) => {
     const el = `<${tag}>`;
     const dash = props['stroke-dasharray'];
     if (isSet(dash) && !/^[\s,0]*$/.test(dash!) && isPainted(style.stroke)) {
@@ -195,12 +243,19 @@ export function parseSvg(svg: string, options: ParseSvgOptions = {}): ParsedSvg 
     for (const m of ['marker-start', 'marker-mid', 'marker-end', 'marker']) {
       if (isSet(props[m])) { warn('markers', tag, `${m} on ${el} is ignored, markers are not drawn`); break; }
     }
-    if (isSet(props['clip-path'])) warn('clip-path', tag, `clip-path on ${el} is ignored, the whole shape is emitted`);
-    if (isSet(props.mask)) warn('clip-path', tag, `mask on ${el} is ignored, the whole shape is emitted`);
-    if (isSet(props.filter)) warn('filter', tag, `filter on ${el} is ignored`);
     if (props['vector-effect'] === 'non-scaling-stroke') {
       warn('vector-effect', tag, `vector-effect="non-scaling-stroke" on ${el} is ignored, the stroke width is scaled with the transform`);
     }
+    // clip-path, mask, filter and opacity on the root element are kept in the
+    // output and apply to the whole result exactly as before, so they are fine.
+    if (isRoot) {
+      const v = props['stroke-opacity'] ?? props['fill-opacity'];
+      if (v != null && parseLength(v, 1) < 1) warn('opacity', tag, `stroke-opacity / fill-opacity on ${el} is ignored, the result is fully opaque`);
+      return;
+    }
+    if (isSet(props['clip-path'])) warn('clip-path', tag, `clip-path on ${el} is ignored, the whole shape is emitted`);
+    if (isSet(props.mask)) warn('clip-path', tag, `mask on ${el} is ignored, the whole shape is emitted`);
+    if (isSet(props.filter)) warn('filter', tag, `filter on ${el} is ignored`);
     for (const o of ['opacity', 'stroke-opacity', 'fill-opacity']) {
       const v = props[o];
       if (v != null && parseLength(v, 1) < 1) { warn('opacity', tag, `${o} on ${el} is ignored, the result is fully opaque`); break; }
@@ -208,12 +263,25 @@ export function parseSvg(svg: string, options: ParseSvgOptions = {}): ParsedSvg 
   };
 
   /** Render one element (a child of a container, or the target of a <use>). */
-  const visit = (el: XmlElement, parentStyle: ResolvedStyle, parentTransform: Matrix, useDepth: number) => {
+  const visit = (el: XmlElement, parentStyle: ResolvedStyle, parentTransform: Matrix, viewport: Viewport, useDepth: number, useAttrs?: Record<string, string>) => {
     const props = computedProps(el, rules);
     if (isHidden(props)) return;
     const style = resolveStyle(props, parentStyle);
-    const transform = el.attrs.transform ? multiply(parentTransform, parseTransform(el.attrs.transform)) : parentTransform;
-    checkProps(props, el.tag, style);
+    let transform = el.attrs.transform ? multiply(parentTransform, parseTransform(el.attrs.transform)) : parentTransform;
+    checkProps(props, el.tag, style, el === root);
+
+    // A nested <svg> or a <symbol> reached through <use> establishes a new viewport:
+    // its content is scaled from its viewBox into width x height at (x, y).
+    if ((el.tag === 'svg' && el !== root) || el.tag === 'symbol') {
+      const sizeAttrs = el.tag === 'symbol' ? (useAttrs ?? {}) : el.attrs;
+      const x = el.tag === 'symbol' ? 0 : parseSize(el.attrs.x, viewport.width, 0);
+      const y = el.tag === 'symbol' ? 0 : parseSize(el.attrs.y, viewport.height, 0);
+      const width = parseSize(sizeAttrs.width, viewport.width, viewport.width);
+      const height = parseSize(sizeAttrs.height, viewport.height, viewport.height);
+      const vb = parseViewBox(el.attrs.viewBox);
+      transform = multiply(transform, viewportTransform(x, y, width, height, vb, el.attrs.preserveAspectRatio));
+      viewport = vb ? { width: vb[2], height: vb[3] } : { width, height };
+    }
 
     if (SHAPE_TAGS.has(el.tag)) {
       const segments = shapeToSegments(el.tag, el.attrs);
@@ -223,31 +291,27 @@ export function parseSvg(svg: string, options: ParseSvgOptions = {}): ParsedSvg 
         if (isPainted(style.fill)) paints.add(style.fill);
       }
     } else if (CONTAINERS.has(el.tag)) {
-      if (el.tag === 'svg' && el !== root && ['viewBox', 'x', 'y', 'width', 'height'].some((a) => el.attrs[a] != null)) {
-        warn('nested-svg', 'svg', 'a nested <svg> with its own viewport is rendered without the viewport transform');
-      }
-      // A <symbol> is only ever reached through <use>; its viewBox is ignored.
       for (const child of el.children) {
         if (child.type !== 'element') continue;
         if (UNSUPPORTED_VISUAL.has(child.tag)) {
           if (!isHidden(computedProps(child, rules))) warn('unsupported-element', child.tag, `<${child.tag}> is not supported and was skipped`);
           continue;
         }
-        if (!NON_RENDERED.has(child.tag)) visit(child, style, transform, useDepth);
+        if (!NON_RENDERED.has(child.tag)) visit(child, style, transform, viewport, useDepth);
       }
     } else if (el.tag === 'use') {
       const href = el.attrs.href ?? el.attrs['xlink:href'] ?? '';
       const target = href.startsWith('#') ? ids.get(href.slice(1)) : undefined;
       if (!target || useDepth >= MAX_USE_DEPTH) return;
       // The referenced element behaves like a child of the <use>, offset by x/y.
-      const x = parseLength(el.attrs.x, 0);
-      const y = parseLength(el.attrs.y, 0);
+      const x = parseSize(el.attrs.x, viewport.width, 0);
+      const y = parseSize(el.attrs.y, viewport.height, 0);
       const useTransform = x || y ? multiply(transform, [1, 0, 0, 1, x, y]) : transform;
-      visit(target, style, useTransform, useDepth + 1);
+      visit(target, style, useTransform, viewport, useDepth + 1, el.attrs);
     }
   };
 
-  visit(root, SVG_DEFAULT_STYLE, IDENTITY, 0);
+  visit(root, SVG_DEFAULT_STYLE, IDENTITY, rootViewport, 0);
 
   const servers = [...paints].filter((p) => p.startsWith('url('));
   if (servers.length > 0) {

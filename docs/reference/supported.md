@@ -16,10 +16,12 @@ description: The SVG elements, stroke styles, transforms, fill rules and CSS fea
 - filled shapes with `nonzero` and `evenodd` fill rules
 - `<use>` (also into `<symbol>` and `<defs>`), and `<style>` sheets with simple
   selectors (`tag`, `.class`, `#id`, `tag.class`, comma lists)
+- nested `<svg>` viewports and `<symbol>` viewBoxes, with `x`, `y`, `width`,
+  `height` (percentages too) and `preserveAspectRatio`
 
 ::: warning Not supported yet
-`text`, `image`, dashes, markers, clip paths, masks, filters, nested `<svg>`
-viewports, `vector-effect`, opacity, CSS combinators. Colours aren't kept
+`text`, `image`, dashes, markers, clip paths, masks, filters,
+`vector-effect`, opacity, CSS combinators. Colours aren't kept
 either: everything ends up as one `currentColor` path.
 :::
 

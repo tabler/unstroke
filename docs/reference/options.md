@@ -52,7 +52,6 @@ const filled = outlineSvg(svgSource, {
 | `markers` | `marker-start`, `marker-mid` or `marker-end` is ignored |
 | `clip-path` | `clip-path` or `mask` is ignored, the whole shape is emitted |
 | `filter` | `filter` is ignored |
-| `nested-svg` | a nested `<svg>` with its own viewBox or viewport is rendered without the viewport transform |
 | `vector-effect` | `vector-effect="non-scaling-stroke"` is ignored, the width scales with the transform |
 | `opacity` | `opacity`, `stroke-opacity` or `fill-opacity` below 1 is ignored, the result is opaque |
 | `paint` | more than one colour, or a gradient or pattern, is merged into one fill colour |

@@ -20,8 +20,8 @@ npx unstroke icons/ -o out/ --optimize           # plus SVGO (needs the svgo pac
 ## Unsupported input
 
 When a file uses something the outline can't reproduce, such as a dashed
-stroke, a `<text>` element, markers, a clip path, a nested viewport, partial
-opacity or several colours, the CLI converts it anyway and prints a warning
+stroke, a `<text>` element, markers, a clip path, partial opacity or several
+colours, the CLI converts it anyway and prints a warning
 on stderr:
 
 ```

@@ -32,7 +32,7 @@ Geometry
 Other
   --optimize               run SVGO on the result (requires the svgo package)
   --strict                 fail on input that uses unsupported features (dashes, text,
-                           markers, clip paths, nested viewports, opacity, several colours)
+                           markers, clip paths, opacity, several colours)
                            instead of converting it with a warning
   -q, --quiet              no progress output (warnings are still printed)
   -h, --help               show this help

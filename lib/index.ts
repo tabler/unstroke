@@ -43,8 +43,8 @@ export interface OutlineOptions extends PathDataOptions {
   fill?: string;
   /**
    * Called for every feature of the input that is not supported and changes
-   * how the result looks (dashes, text, markers, clip paths, nested viewports,
-   * opacity, several colours, …). Nothing is reported when the input only uses
+   * how the result looks (dashes, text, markers, clip paths, opacity, several
+   * colours, …). Nothing is reported when the input only uses
    * supported features. Without a handler the warnings are dropped.
    */
   onWarning?: (warning: SvgWarning) => void;
@@ -175,14 +175,20 @@ function effectiveTolerance(parsed: ParsedSvg, options: OutlineOptions): number 
   return tolerance;
 }
 
-const DROPPED_ROOT_ATTRS = new Set([
-  'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit',
-  'fill-rule', 'style',
-]);
+/**
+ * Root attributes that described the strokes and fills of the input and would
+ * be wrong or misleading on the output (a `stroke-dasharray` on the result
+ * would suggest the dashes survived). `clip-path`, `mask`, `filter` and
+ * `opacity` stay: on the root they apply to the whole picture either way.
+ */
+function isPaintAttr(name: string): boolean {
+  return name === 'fill' || name === 'style' || name === 'vector-effect'
+    || name.startsWith('stroke') || name.startsWith('fill-') || name.startsWith('marker');
+}
 
 function serializeSvg(rootAttrs: Record<string, string>, d: string, fill: string): string {
   const attrs = Object.entries(rootAttrs)
-    .filter(([k]) => !DROPPED_ROOT_ATTRS.has(k))
+    .filter(([k]) => !isPaintAttr(k))
     .map(([k, v]) => `${k}="${escapeAttr(v)}"`);
   if (!rootAttrs.xmlns) attrs.unshift('xmlns="http://www.w3.org/2000/svg"');
   attrs.push(`fill="${escapeAttr(fill)}"`);

@@ -49,9 +49,10 @@ describe('warnings', () => {
     expect(codes(wrap('<path d="M2 12h20" style="filter: url(#f)"/>'))).toEqual(['filter']);
   });
 
-  it('reports a nested svg with its own viewport', () => {
-    expect(codes(wrap('<svg x="4" y="4" width="16" height="16" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"/></svg>'))).toEqual(['nested-svg']);
-    expect(codes(wrap('<svg><path d="M2 12h20"/></svg>'))).toEqual([]);
+  it('does not report clip-path, mask, filter or opacity on the root, which the output keeps', () => {
+    expect(codes(wrap('<path d="M2 12h20"/>', 'opacity="0.5" clip-path="url(#c)" mask="url(#m)" filter="url(#f)"'))).toEqual([]);
+    expect(codes(wrap('<path d="M2 12h20"/>', 'stroke-opacity=".3"'))).toEqual(['opacity']);
+    expect(codes(wrap('<path d="M2 12h20"/>', 'stroke-dasharray="4 2"'))).toEqual(['dasharray']);
   });
 
   it('reports non-scaling-stroke and partial opacity', () => {
@@ -86,6 +87,21 @@ describe('warnings', () => {
     expect((err as Error).message).toMatch(/<text> is not supported/);
     expect(seen).toEqual(['unsupported-element']);
     expect(outlineSvg(wrap('<path d="M2 12h20"/>'), { strict: true })).toContain('<path d="M22 13H2V11H22Z"/>');
+  });
+});
+
+describe('output root attributes', () => {
+  it('drops every stroke, fill and marker attribute from the root and keeps the rest', () => {
+    const svg = outlineSvg(wrap('<path d="M2 12h20"/>', 'stroke-dasharray="4 2" stroke-opacity=".3" fill-opacity=".5" marker-end="url(#m)" vector-effect="non-scaling-stroke" opacity="0.5" clip-path="url(#c)" class="icon" data-x="1"'));
+    const root = /<svg ([^>]*)>/.exec(svg)![1]!;
+    for (const a of ['stroke', 'stroke-width', 'stroke-dasharray', 'stroke-opacity', 'fill-opacity', 'marker-end', 'vector-effect']) {
+      expect(root).not.toMatch(new RegExp(`(^| )${a}=`));
+    }
+    expect(root).toMatch(/ fill="currentColor"/);
+    expect(root).toMatch(/opacity="0.5"/);
+    expect(root).toMatch(/clip-path="url\(#c\)"/);
+    expect(root).toMatch(/class="icon"/);
+    expect(root).toMatch(/data-x="1"/);
   });
 });
 
