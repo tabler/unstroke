@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns: ["*"]
+    labels:
+      - "dependencies"
+      - "github actions"
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      # one PR for every dev / docs dependency; clipper-lib, the only runtime
+      # dependency, gets its own so a change there is reviewed on its own
+      dev-dependencies:
+        dependency-type: "development"
+        patterns: ["*"]
+    labels:
+      - "dependencies"
