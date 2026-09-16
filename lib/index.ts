@@ -8,6 +8,10 @@ import { applyToPoint, matrixScale, transformSegments } from './path/transform.j
 import type { Segment } from './path/types.js';
 import { strokePolyline } from './stroke/stroke.js';
 
+// Lower-level API. Exported for tools that need geometry rather than markup;
+// these follow the engine and may change in a minor release (see the docs).
+// The stable, semver-covered surface is outlineSvg, outlinePathData,
+// outlineSvgToMultiPolygon, OutlineOptions, the warnings and the CLI.
 export type { LineCap, LineJoin, MultiPolygon, Point, Polygon, Polyline, Ring, StrokeStyle } from './geometry/types.js';
 export type { Segment } from './path/types.js';
 export type { DrawableShape, ParsedSvg, ParseSvgOptions, ResolvedStyle, SvgWarning, SvgWarningCode } from './parse/svg.js';

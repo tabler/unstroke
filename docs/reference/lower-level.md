@@ -6,7 +6,16 @@ description: The unstroke pipeline exposed piece by piece, from parsing SVG thro
 # Lower-level API
 
 The pipeline is exposed piece by piece, for tools that need the geometry
-rather than the markup:
+rather than the markup.
+
+::: warning Stability
+These exports follow the engine, not the public API. Their signatures and
+the exact geometry they produce can change in a minor release, with a note
+in the changelog. If you build on them, pin the minor version. The stable
+surface is `outlineSvg`, `outlinePathData`, `outlineSvgToMultiPolygon`, the
+[options](/reference/options) they accept, the warnings, and the CLI; those
+only change in a major.
+:::
 
 ```
 parseSvg → shapes (segments + resolved style + transform)
