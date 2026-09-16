@@ -3,9 +3,16 @@
   "baseBranch": "main",
   "access": "public",
   "format": "auto",
-  "changelog": ["@changesets/changelog-github", { "repo": "tabler/unstroke" }],
+  "changelog": [
+    "./changelog.mjs",
+    {
+      "repo": "tabler/unstroke"
+    }
+  ],
   "commit": false,
-  "ignore": ["unstroke-docs"],
+  "ignore": [
+    "unstroke-docs"
+  ],
   "fixed": [],
   "linked": [],
   "updateInternalDependencies": "patch"
