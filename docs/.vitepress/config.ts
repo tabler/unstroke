@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress';
+import llmstxt from 'vitepress-plugin-llms';
 
 const SITE = 'https://unstroke.vercel.app';
 const DESCRIPTION = 'Convert stroked SVG icons into filled outlines. Every stroke becomes a filled shape, overlaps are merged with a real boolean union, and each icon comes out as one clean path.';
@@ -48,7 +49,15 @@ export default defineConfig({
     const description = pageData.description || pageData.frontmatter.description || DESCRIPTION;
     const path = pageData.relativePath.replace(/(^|\/)index\.md$/, '$1').replace(/\.md$/, '');
     const url = `${SITE}/${path}`;
+    const isGallery = params?.name != null || pageData.relativePath.startsWith('demo/');
     pageData.frontmatter.head ??= [];
+    if (!isGallery) {
+      // the llms plugin writes `dir/index.md` as `dir.md`; the home page has no twin, llms.txt stands in for it
+      const md = pageData.relativePath === 'index.md'
+        ? 'llms.txt'
+        : pageData.relativePath.replace(/\/index\.md$/, '.md');
+      pageData.frontmatter.head.push(['link', { rel: 'alternate', type: 'text/markdown', href: `${SITE}/${md}` }]);
+    }
     pageData.frontmatter.head.push(
       ['link', { rel: 'canonical', href: url }],
       ['meta', { property: 'og:title', content: title }],
@@ -86,6 +95,19 @@ export default defineConfig({
   vite: {
     server: { fs: { allow: ['..'] } },
     ssr: { external: ['clipper-lib', 'svgo'] },
+    plugins: [
+      // llms.txt, llms-full.txt and a .md twin of every docs page, for AI tools that read docs as text.
+      llmstxt({
+        domain: SITE,
+        title: 'unstroke',
+        description: DESCRIPTION,
+        details: 'unstroke is a TypeScript library and CLI (npm: unstroke) that converts stroked SVG icons into filled outlines: every stroke becomes a filled shape, overlaps are merged with a boolean union on an integer grid, and the result is one path per icon, refitted with cubic Béziers. Use it for icon fonts, PDF export, laser cutting and design tools without stroke support.',
+        // the demo and the per-icon pages are generated galleries, not documentation
+        ignoreFiles: ['demo/**', 'icon/**'],
+        // the site sidebar is the same tree registered under three path prefixes; list it once
+        sidebar: sidebar(),
+      }),
+    ],
   },
 });
 

@@ -7,8 +7,10 @@
 
 # unstroke
 
+[![npm](https://img.shields.io/npm/v/unstroke?color=206bc4)](https://www.npmjs.com/package/unstroke)
 [![CI](https://github.com/tabler/unstroke/actions/workflows/ci.yml/badge.svg)](https://github.com/tabler/unstroke/actions/workflows/ci.yml)
-[![Demo](https://img.shields.io/badge/demo-unstroke.vercel.app-206bc4)](https://unstroke.vercel.app)
+[![npm provenance](https://img.shields.io/badge/npm-provenance-2ea043?logo=npm&logoColor=white)](https://www.npmjs.com/package/unstroke#provenance)
+[![Docs](https://img.shields.io/badge/docs-unstroke.vercel.app-206bc4)](https://unstroke.vercel.app)
 
 Convert stroked SVG into filled outlines. Every stroke becomes a filled shape,
 overlapping shapes are merged with a boolean union, and the whole icon comes
