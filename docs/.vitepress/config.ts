@@ -93,6 +93,8 @@ export default defineConfig({
     outline: { level: [2, 3] },
   },
   vite: {
+    // the PostHog variables on Vercel use the NEXT_PUBLIC_ prefix
+    envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
     server: { fs: { allow: ['..'] } },
     ssr: { external: ['clipper-lib', 'svgo'] },
     plugins: [
