@@ -3,3 +3,6 @@ dist
 coverage
 .DS_Store
 test/.diff
+github
+.vercel
+.env*
