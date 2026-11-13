@@ -1,5 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "git": {
+    "deploymentEnabled": {
+      "changeset-release/**": false,
+      "changesets-ghcommit-temp/**": false,
+      "dependabot/**": false
+    }
+  },
   "framework": "vitepress",
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm --filter unstroke-docs build",
